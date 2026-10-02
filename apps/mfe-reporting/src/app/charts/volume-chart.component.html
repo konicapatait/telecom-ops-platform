@@ -1,0 +1,94 @@
+@if (series().length > 1) {
+  <ul class="chart__legend" aria-label="Legend">
+    @for (s of series(); track s.group.id) {
+      <li>
+        <span class="chart__key chart__key--line" [style.background]="'var(--series-' + s.group.slot + ')'"></span
+        >{{ s.group.label }}
+      </li>
+    }
+  </ul>
+}
+<div
+  class="chart"
+  tabindex="0"
+  role="group"
+  aria-label="Cases opened per week. Use left and right arrow keys to read values."
+  (keydown)="onKey($event)"
+  (focus)="hover() === null && hover.set(weeks().length - 1)"
+  (blur)="hover.set(null)"
+>
+  <svg
+    [attr.width]="width()"
+    [attr.height]="height"
+    aria-hidden="true"
+    (pointermove)="onPointer($event)"
+    (pointerleave)="hover.set(null)"
+  >
+    <!-- recessive grid + y labels -->
+    @for (t of yTicks(); track t) {
+      <line class="chart__grid" [attr.x1]="m.left" [attr.x2]="m.left + plotW()" [attr.y1]="y(t)" [attr.y2]="y(t)" />
+      <text class="chart__axis" [attr.x]="m.left - 8" [attr.y]="y(t) + 4" text-anchor="end">{{ t }}</text>
+    }
+    @for (l of xLabels(); track l.i) {
+      <text class="chart__axis" [attr.x]="x(l.i)" [attr.y]="height - 8" text-anchor="middle">{{ l.label }}</text>
+    }
+    <!-- lines -->
+    @for (p of paths(); track p.group.id) {
+      <path
+        class="chart__line"
+        [attr.d]="p.d"
+        [attr.data-group]="p.group.id"
+        [style.stroke]="'var(--series-' + p.group.slot + ')'"
+      />
+    }
+    <!-- direct end labels (≤ 4 series): text in text colour, identity carried by the key -->
+    @if (directLabels()) {
+      @for (e of endLabels(); track e.group.id) {
+        <line
+          [attr.x1]="x(weeks().length - 1) + 8"
+          [attr.x2]="x(weeks().length - 1) + 20"
+          [attr.y1]="e.y"
+          [attr.y2]="e.y"
+          class="chart__endkey"
+          [style.stroke]="'var(--series-' + e.group.slot + ')'"
+        />
+        <text class="chart__endlabel" [attr.x]="x(weeks().length - 1) + 24" [attr.y]="e.y + 4">
+          {{ e.group.label }}
+        </text>
+      }
+    }
+    <!-- crosshair -->
+    @if (tooltip(); as t) {
+      <line
+        class="chart__crosshair"
+        [attr.x1]="x(t.i)"
+        [attr.x2]="x(t.i)"
+        [attr.y1]="m.top"
+        [attr.y2]="m.top + plotH"
+      />
+      @for (s of series(); track s.group.id) {
+        <circle
+          class="chart__dot"
+          [attr.cx]="x(t.i)"
+          [attr.cy]="y(s.values[t.i])"
+          r="4"
+          [style.fill]="'var(--series-' + s.group.slot + ')'"
+        />
+      }
+    }
+    <!-- hit area: the whole plot, so the pointer only has to find the week -->
+    <rect class="chart__hit" [attr.x]="m.left" [attr.y]="m.top" [attr.width]="plotW()" [attr.height]="plotH" />
+  </svg>
+  @if (tooltip(); as t) {
+    <div class="chart__tooltip" role="status" [style.left.px]="t.left" [style.top.px]="m.top">
+      <div class="chart__tooltip-title">Week of {{ short(t.week) }}</div>
+      @for (r of t.rows; track r.group.id) {
+        <div class="chart__tooltip-row">
+          <span class="chart__key chart__key--line" [style.background]="'var(--series-' + r.group.slot + ')'"></span>
+          <strong>{{ r.value }}</strong
+          ><span>{{ r.group.label }}</span>
+        </div>
+      }
+    </div>
+  }
+</div>

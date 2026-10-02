@@ -1,0 +1,83 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# telecom-ops-platform: root pipeline (ADR-0009)
+#
+#   verify  → workspace-wide checks (boundaries, shared-config drift, libs)
+#   plan    → decide WHICH apps run: affected | all (design-system bump) | one (APP=<name>)
+#   apps    → child pipeline stitched from each app's own apps/<app>/.gitlab-ci.yml
+#   e2e     → composed Playwright suite (nightly + before prod)
+#
+# Build one app on its own: Run pipeline → variable APP=mfe-fraud
+# ─────────────────────────────────────────────────────────────────────────────
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "web"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_PIPELINE_SOURCE == "trigger"
+
+variables:
+  APP:
+    value: ""
+    description: "Build/test/deploy ONE app independently (e.g. mfe-fraud). Empty = affected apps."
+  FULL_BUILD:
+    value: "false"
+    description: "true = run every app (what a design-system bump does automatically)."
+
+include:
+  - local: ci/templates/base.gitlab-ci.yml
+
+stages: [verify, plan, apps, e2e]
+
+workspace:checks:
+  extends: .node
+  stage: verify
+  rules:
+    - if: $APP == ""
+  script:
+    - npm run check:shared-config
+    - npm run check:layouts
+    - npm run check:headers
+    - npx nx affected -t lint test --exclude='tag:type:app,tag:type:e2e' --base=$NX_BASE --head=$NX_HEAD
+  artifacts:
+    when: always
+    reports:
+      junit: test-output/**/junit.xml
+
+plan:apps:
+  extends: .node
+  stage: plan
+  script:
+    - node tools/ci/generate-pipeline.mjs > apps-pipeline.yml
+    - cat apps-pipeline.yml
+  artifacts:
+    paths: [apps-pipeline.yml]
+
+apps:
+  stage: apps
+  needs: [plan:apps]
+  trigger:
+    include:
+      - artifact: apps-pipeline.yml
+        job: plan:apps
+    strategy: depend
+  variables:
+    PARENT_PIPELINE_ID: $CI_PIPELINE_ID
+
+e2e:composed:
+  extends: .node
+  stage: e2e
+  image: mcr.microsoft.com/playwright:v1.63.0-noble
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
+      allow_failure: true
+  script:
+    - npx nx e2e shell-e2e
+  artifacts:
+    when: always
+    paths: [test-output/shell-e2e/]
+    reports:
+      junit: test-output/shell-e2e/junit.xml

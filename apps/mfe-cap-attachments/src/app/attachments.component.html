@@ -1,0 +1,57 @@
+<form *hasEntitlement="'case:attachments:upload'" class="att__upload" (submit)="$event.preventDefault(); upload()">
+  <label class="att__file">
+    <span class="att__label">File to upload</span>
+    <input #file type="file" name="file" required />
+  </label>
+  <ds-select label="Category" [options]="categories" [value]="category()" (valueChange)="category.set($event)" />
+  <button dsButton variant="primary" type="submit" [disabled]="uploading()">
+    {{ uploading() ? 'Uploading…' : 'Upload' }}
+  </button>
+</form>
+
+@if (attachments.isLoading() && !attachments.hasValue()) {
+  <ds-skeleton variant="panel" />
+} @else if (attachments.error()) {
+  <ds-empty-state
+    icon="warning"
+    heading="Attachments could not be loaded"
+    actionLabel="Retry"
+    (action)="attachments.reload()"
+  />
+} @else if (!attachments.value()?.length) {
+  <ds-empty-state icon="empty" heading="No attachments yet" />
+} @else {
+  <table class="att">
+    <thead>
+      <tr>
+        <th scope="col">File</th>
+        <th scope="col">Category</th>
+        <th scope="col">Size</th>
+        <th scope="col">Uploaded</th>
+        <th scope="col"><span class="att__label">Actions</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (a of attachments.value(); track a.attachmentId) {
+        <tr>
+          <td class="att__name">{{ a.fileName }}</td>
+          <td>{{ a.category }}</td>
+          <td>{{ size(a.sizeBytes) }}</td>
+          <td>{{ a.uploadedBy }} · {{ a.uploadedAt | date: 'MMM d, HH:mm' : 'UTC' }}</td>
+          <td>
+            <button
+              dsButton
+              size="sm"
+              variant="ghost"
+              type="button"
+              (click)="download(a)"
+              [attr.aria-label]="'Download ' + a.fileName"
+            >
+              Download
+            </button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

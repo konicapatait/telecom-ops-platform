@@ -1,0 +1,8 @@
+{
+  "name": "case-workspace",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/case-workspace/src",
+  "projectType": "library",
+  "tags": ["type:layout", "family:case"],
+  "targets": {}
+}

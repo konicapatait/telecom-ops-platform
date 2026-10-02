@@ -1,0 +1,46 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":pinAllExceptPeerDependencies"],
+  "platform": "gitlab",
+  "rangeStrategy": "pin",
+  "labels": ["dependencies"],
+  "prConcurrentLimit": 5,
+  "packageRules": [
+    {
+      "description": "ADR-0001: the design system is bumped once for the whole workspace. CI runs EVERY app on this change.",
+      "matchPackageNames": ["@org/design-system", "@org/design-tokens"],
+      "groupName": "design system",
+      "labels": ["design-system", "full-build"]
+    },
+    {
+      "matchPackageNames": ["@org/design-system", "@org/design-tokens"],
+      "matchUpdateTypes": ["patch"],
+      "automerge": true
+    },
+    {
+      "matchPackageNames": ["@org/design-system", "@org/design-tokens"],
+      "matchUpdateTypes": ["major"],
+      "labels": ["design-system", "full-build", "breaking", "upgrade-window"],
+      "automerge": false
+    },
+    {
+      "description": "ADR-0010: Angular, Native Federation, Nx move together (use nx migrate).",
+      "matchPackageNames": [
+        "@angular/**",
+        "@angular-architects/native-federation",
+        "@nx/**",
+        "nx",
+        "@schematics/angular",
+        "angular-eslint",
+        "typescript"
+      ],
+      "groupName": "angular + nx toolchain",
+      "matchUpdateTypes": ["major", "minor"],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "matchPackageNames": ["vitest", "@vitest/**", "@analogjs/**", "vite"],
+      "groupName": "test toolchain"
+    }
+  ]
+}

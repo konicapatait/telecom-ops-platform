@@ -1,0 +1,8 @@
+{
+  "name": "@platform/tools",
+  "version": "0.0.0",
+  "private": true,
+  "type": "commonjs",
+  "main": "./src/index.ts",
+  "generators": "./generators.json"
+}

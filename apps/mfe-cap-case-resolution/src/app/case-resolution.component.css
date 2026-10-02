@@ -1,0 +1,90 @@
+.dec {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: var(--ds-space-6);
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .dec {
+    grid-template-columns: 1fr;
+  }
+}
+.dec__h {
+  font-size: var(--ds-font-size-lg);
+  margin: 0 0 var(--ds-space-3);
+}
+.dec__sub {
+  font-size: var(--ds-font-size-md);
+  margin: 0 0 var(--ds-space-2);
+}
+.dec__codes {
+  border: 0;
+  margin: 0 0 var(--ds-space-3);
+  padding: 0;
+  display: grid;
+  gap: var(--ds-space-2);
+}
+.dec__codes legend {
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-text-muted);
+  margin-bottom: var(--ds-space-1);
+}
+.dec__code {
+  display: flex;
+  gap: var(--ds-space-2);
+  align-items: baseline;
+}
+.dec__label {
+  display: block;
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-text-muted);
+  margin-bottom: var(--ds-space-1);
+}
+textarea {
+  width: 100%;
+  max-width: 640px;
+  padding: var(--ds-space-2);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-sm);
+  background: var(--ds-color-surface);
+  margin-bottom: var(--ds-space-3);
+  resize: vertical;
+  display: block;
+}
+.dec__error {
+  color: var(--ds-color-danger);
+  font-size: var(--ds-font-size-sm);
+  margin: 0 0 var(--ds-space-2);
+}
+.dec__done,
+.dec__pending {
+  padding: var(--ds-space-3);
+  border-left: 3px solid var(--ds-color-success);
+  background: var(--ds-color-surface-sunken);
+}
+.dec__pending {
+  border-left-color: var(--ds-color-border);
+}
+.dec__note {
+  margin: var(--ds-space-2) 0;
+}
+.dec__muted {
+  color: var(--ds-color-text-muted);
+  font-size: var(--ds-font-size-sm);
+  margin: 0;
+}
+.dec__codes-ref {
+  padding: var(--ds-space-3);
+  background: var(--ds-color-surface-sunken);
+  border-radius: var(--ds-radius-md);
+  font-size: var(--ds-font-size-sm);
+}
+.dec__codes-ref ul {
+  margin: 0;
+  padding-left: var(--ds-space-4);
+  display: grid;
+  gap: var(--ds-space-1);
+}
+.dec__codes-ref code {
+  font-family: var(--ds-font-family-mono);
+}

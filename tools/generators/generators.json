@@ -1,0 +1,11 @@
+{
+  "name": "@platform/tools",
+  "version": "0.0.0",
+  "generators": {
+    "mfe": {
+      "factory": "./src/generators/mfe/generator",
+      "schema": "./src/generators/mfe/schema.json",
+      "description": "Create a federation remote (domain, capability, 360, reporting) with its manifest entries, Nx tags, pipeline file and dev harness."
+    }
+  }
+}

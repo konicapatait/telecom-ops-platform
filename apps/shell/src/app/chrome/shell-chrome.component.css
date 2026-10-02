@@ -1,0 +1,12 @@
+.shell-header__spacer {
+  flex: 1;
+}
+.shell-header__user {
+  color: var(--ds-color-text-muted);
+  font-size: var(--ds-font-size-sm);
+  white-space: nowrap;
+}
+.shell-header__search {
+  flex: 1;
+  max-width: 520px;
+}

@@ -1,0 +1,40 @@
+<ds-app-shell>
+  <span dsAppShellBrand>Telecom Operations</span>
+
+  <ng-container dsAppShellHeader>
+    @if (subscriberSearch) {
+      <shell-capability-slot
+        class="shell-header__search"
+        remote="mfe-cap-subscriber-search"
+        exposedModule="./SubscriberSearch"
+        label="Search"
+        [compact]="true"
+      />
+    }
+    @if (caseContext.activeCaseId(); as caseId) {
+      <ds-badge tone="info">Case {{ caseId }}</ds-badge>
+    }
+    <span class="shell-header__spacer"></span>
+    @if (mockMode) {
+      <ds-badge tone="warning" title="All data is mocked (MSW)">Mock data</ds-badge>
+    }
+    @if (personas; as p) {
+      <ds-select
+        label="Persona"
+        [options]="personaOptions"
+        [value]="p.current().id"
+        (valueChange)="switchPersona($event)"
+      />
+    }
+    @if (auth.user(); as user) {
+      <span class="shell-header__user">{{ user.displayName }}</span>
+    }
+    <button dsButton variant="ghost" size="sm" type="button" (click)="signOut()">Sign out</button>
+  </ng-container>
+
+  <ds-nav-list dsAppShellNav [items]="navItems()" />
+
+  <router-outlet />
+</ds-app-shell>
+
+<ds-notification-host />

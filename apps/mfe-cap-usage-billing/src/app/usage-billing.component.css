@@ -1,0 +1,49 @@
+.ub__toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-4);
+  margin-bottom: var(--ds-space-3);
+  flex-wrap: wrap;
+}
+.ub__check {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-1);
+  font-size: var(--ds-font-size-sm);
+}
+.ub__spacer {
+  flex: 1;
+}
+.ub__total {
+  font-weight: 600;
+}
+.ub {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--ds-color-surface);
+  border: 1px solid var(--ds-color-border);
+}
+th,
+td {
+  text-align: left;
+  padding: var(--ds-space-2) var(--ds-space-3);
+  border-bottom: 1px solid var(--ds-color-border);
+  vertical-align: top;
+}
+th {
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-text-muted);
+}
+.ub__num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.ub__flagged {
+  background: color-mix(in srgb, var(--ds-color-danger) 8%, transparent);
+  box-shadow: inset 3px 0 0 var(--ds-color-danger);
+}
+.ub__reason {
+  display: block;
+  color: var(--ds-color-danger);
+  font-size: var(--ds-font-size-sm);
+}

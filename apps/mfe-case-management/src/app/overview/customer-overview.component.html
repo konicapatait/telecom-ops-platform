@@ -1,0 +1,105 @@
+<section class="co" aria-label="Customer overview">
+  @if (customer(); as c) {
+    <div class="co__card" [attr.data-mode]="mode()">
+      <div class="co__head">
+        <h2 class="co__name">{{ c.displayName }}</h2>
+        <ds-badge tone="info">{{ c.kind === 'PARTNER' ? 'Partner' : 'Subscriber' }}</ds-badge>
+        <ds-badge [tone]="c.status === 'ACTIVE' ? 'success' : 'warning'">{{ c.status.replace('_', ' ') }}</ds-badge>
+        <span class="co__spacer"></span>
+        <button dsButton size="sm" type="button" (click)="open360(c)">
+          {{ c.kind === 'PARTNER' ? 'Agent full profile' : 'Customer full profile' }}
+        </button>
+        @if (mode() === 'selected') {
+          <button dsButton size="sm" variant="ghost" type="button" (click)="clearCustomer.emit()">
+            Change customer
+          </button>
+        } @else {
+          <span class="co__hint">From the open case</span>
+          <button dsButton size="sm" variant="primary" type="button" (click)="selectCustomer.emit(c.customerId)">
+            Show all cases for {{ c.displayName }}
+          </button>
+        }
+      </div>
+      <dl class="co__facts">
+        <div>
+          <dt>{{ c.kind === 'PARTNER' ? 'Partner id' : 'Account' }}</dt>
+          <dd>{{ c.customerId }}</dd>
+        </div>
+        @if (c.contact) {
+          <div>
+            <dt>{{ c.kind === 'PARTNER' ? 'Region' : 'Phone' }}</dt>
+            <dd>{{ c.contact }}</dd>
+          </div>
+        }
+        @if (c.segment) {
+          <div>
+            <dt>{{ c.kind === 'PARTNER' ? 'Tier' : 'Segment' }}</dt>
+            <dd>{{ c.segment }}</dd>
+          </div>
+        }
+        @if (c.plan) {
+          <div>
+            <dt>Plan</dt>
+            <dd>{{ c.plan }}{{ c.lineCount ? ' · ' + c.lineCount + ' line' + (c.lineCount > 1 ? 's' : '') : '' }}</dd>
+          </div>
+        }
+        @if (c.since) {
+          <div>
+            <dt>Customer since</dt>
+            <dd>{{ c.since | date: 'MMM y' : 'UTC' }}</dd>
+          </div>
+        }
+        @if (c.balance !== undefined) {
+          <div>
+            <dt>Balance</dt>
+            <dd>{{ money(c) }}</dd>
+          </div>
+        }
+        @if (c.relatedSubjectIds.length) {
+          <div>
+            <dt>{{ c.kind === 'PARTNER' ? 'Linked subscribers' : 'Linked dealers' }}</dt>
+            <dd>
+              @for (r of c.relatedSubjectIds; track r) {
+                <button type="button" class="co__link" (click)="pick(r)">{{ r }}</button>
+              }
+            </dd>
+          </div>
+        }
+      </dl>
+    </div>
+  } @else {
+    <div class="co__search">
+      <h2 class="co__name">Find a customer</h2>
+      <p class="co__hint">
+        Showing every case. Search for a subscriber or partner to see only their cases in each tab.
+      </p>
+      <ds-search-field
+        label="Search customers"
+        placeholder="Name, account, partner id or phone number"
+        (search)="term.set($event.trim())"
+      />
+      @if (term()) {
+        @if (results.isLoading()) {
+          <ds-skeleton />
+        } @else {
+          <ul class="co__results" [attr.aria-label]="'Customers matching ' + term()">
+            @for (r of results.value(); track r.customerId) {
+              <li>
+                <button type="button" class="co__hit" (click)="pick(r.customerId)">
+                  <strong>{{ r.displayName }}</strong>
+                  <span class="co__id">{{ r.customerId }}</span>
+                  <ds-badge>{{ r.kind === 'PARTNER' ? 'Partner' : 'Subscriber' }}</ds-badge>
+                  @if (r.contact) {
+                    <span class="co__hint">{{ r.contact }}</span>
+                  }
+                </button>
+              </li>
+            } @empty {
+              <li class="co__hint">No customer matches "{{ term() }}".</li>
+            }
+          </ul>
+        }
+      }
+    </div>
+  }
+</section>

@@ -1,0 +1,12 @@
+import { TestBed } from '@angular/core/testing';
+import { <%= className %>Component } from './<%= fileName %>.component';
+
+describe('<%= className %>Component', () => {
+  it('renders for the case it is given', async () => {
+    const fixture = TestBed.createComponent(<%= className %>Component);
+    fixture.componentRef.setInput('caseId', 'FRD-2026-000142');
+    fixture.componentRef.setInput('caseType', 'FRAUD_SIM_SWAP');
+    await fixture.whenStable();
+    expect(fixture.nativeElement.textContent).toContain('FRD-2026-000142');
+  });
+});

@@ -1,0 +1,14 @@
+import routes from './<%= fileName %>.routes';
+import { <%= className %>ProfileComponent } from './<%= fileName %>-profile.component';
+import { <%= constName %>_SECTIONS } from './<%= fileName %>.sections';
+
+describe('<%= projectName %> exposed routes', () => {
+  it('guards the section and routes a profile by id', () => {
+    expect(routes[0].canActivate?.length).toBe(1);
+    expect(routes[0].children?.[0]).toMatchObject({ path: ':profileId', component: <%= className %>ProfileComponent });
+  });
+
+  it('never shows an audit log on a 360 screen (resolved decision)', () => {
+    expect(<%= constName %>_SECTIONS.some((s) => s.remote === 'mfe-cap-audit-trail')).toBe(false);
+  });
+});

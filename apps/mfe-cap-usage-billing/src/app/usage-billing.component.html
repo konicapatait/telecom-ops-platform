@@ -1,0 +1,52 @@
+@if (usage.isLoading() && !usage.hasValue()) {
+  <ds-skeleton variant="panel" />
+} @else if (forbidden()) {
+  <ds-empty-state icon="lock" heading="No access to usage" message="You need the case:usage:view entitlement." />
+} @else if (usage.error()) {
+  <ds-empty-state icon="warning" heading="Usage could not be loaded" actionLabel="Retry" (action)="usage.reload()" />
+} @else {
+  <div class="ub__toolbar">
+    <ds-select label="Type" [options]="typeOptions" [value]="type()" (valueChange)="type.set($event)" />
+    <label class="ub__check">
+      <input type="checkbox" [checked]="flaggedOnly()" (change)="flaggedOnly.set($any($event.target).checked)" />
+      Flagged only
+    </label>
+    <span class="ub__spacer"></span>
+    @if (flaggedCount()) {
+      <ds-badge tone="danger">{{ flaggedCount() }} flagged</ds-badge>
+    }
+    <span class="ub__total">Total {{ money(total(), 'USD') }}</span>
+  </div>
+
+  @if (rows().length) {
+    <table class="ub">
+      <thead>
+        <tr>
+          <th scope="col">When (UTC)</th>
+          <th scope="col">Type</th>
+          <th scope="col">Detail</th>
+          <th scope="col">Usage</th>
+          <th scope="col" class="ub__num">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of rows(); track r.recordId) {
+          <tr [class.ub__flagged]="r.flagged">
+            <td>{{ r.at | date: 'MMM d, HH:mm' : 'UTC' }}</td>
+            <td>{{ r.type.replace('_', ' ') }}</td>
+            <td>
+              {{ r.detail }}
+              @if (r.flagged) {
+                <span class="ub__reason"><span aria-hidden="true">⚑</span> {{ r.flagReason }}</span>
+              }
+            </td>
+            <td>{{ measure(r) }}</td>
+            <td class="ub__num">{{ money(r.amount, r.currency) }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <ds-empty-state icon="empty" heading="No usage matches these filters" />
+  }
+}

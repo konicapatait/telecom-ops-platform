@@ -1,0 +1,8 @@
+{
+  "name": "auth-mock",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/auth/mock/src",
+  "projectType": "library",
+  "tags": ["type:mocks", "scope:shared"],
+  "targets": {}
+}

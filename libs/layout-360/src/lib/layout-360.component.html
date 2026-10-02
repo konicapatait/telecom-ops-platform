@@ -1,0 +1,48 @@
+<header class="l360__banner" aria-label="Profile">
+  <div class="l360__title-row">
+    <h1 class="l360__title">{{ profile().title }}</h1>
+    @for (b of profile().badges ?? []; track b.label) {
+      <ds-badge [tone]="b.tone ?? 'neutral'">{{ b.label }}</ds-badge>
+    }
+  </div>
+  @if (profile().subtitle) {
+    <p class="l360__subtitle">{{ profile().subtitle }}</p>
+  }
+  @if (profile().facts?.length) {
+    <dl class="l360__facts">
+      @for (f of profile().facts; track f.label) {
+        <div>
+          <dt>{{ f.label }}</dt>
+          <dd>{{ f.value }}</dd>
+        </div>
+      }
+    </dl>
+  }
+</header>
+
+@if (kpis().length) {
+  <ul class="l360__kpis" aria-label="Key figures">
+    @for (k of kpis(); track k.label) {
+      <li class="l360__kpi" [attr.data-tone]="k.tone ?? 'neutral'">
+        <span class="l360__kpi-value">{{ k.value }}</span>
+        <span class="l360__kpi-label">{{ k.label }}</span>
+        @if (k.hint) {
+          <span class="l360__kpi-hint">{{ k.hint }}</span>
+        }
+      </li>
+    }
+  </ul>
+}
+
+<div class="l360__grid">
+  @for (s of visibleSections(); track s.id) {
+    <section class="l360__section" [attr.data-span]="s.span" [attr.aria-labelledby]="'l360-' + s.id">
+      <h2 class="l360__section-title" [id]="'l360-' + s.id">{{ s.title }}</h2>
+      @if (s.remote && s.exposedModule) {
+        <l360-panel-host [remote]="s.remote" [exposedModule]="s.exposedModule" [inputs]="inputsFor(s)" />
+      } @else if (templateFor(s.id); as tpl) {
+        <ng-container [ngTemplateOutlet]="tpl" />
+      }
+    </section>
+  }
+</div>

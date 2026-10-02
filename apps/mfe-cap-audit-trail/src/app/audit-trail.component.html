@@ -1,0 +1,73 @@
+@if (audit.isLoading() && !audit.hasValue()) {
+  <ds-skeleton variant="panel" />
+} @else if (forbidden()) {
+  <ds-empty-state
+    icon="lock"
+    heading="No access to the audit log"
+    message="You need the case:audit:view entitlement."
+  />
+} @else if (audit.error()) {
+  <ds-empty-state
+    icon="warning"
+    heading="Audit log could not be loaded"
+    actionLabel="Retry"
+    (action)="audit.reload()"
+  />
+} @else {
+  <label class="al__search">
+    <span class="al__sr">Search the audit log</span>
+    <input type="search" placeholder="Search" [value]="query()" (input)="query.set($any($event.target).value)" />
+    <span class="al__search-icon" aria-hidden="true">⌕</span>
+  </label>
+
+  @if (track().tiers.length) {
+    <ol class="al__track" aria-label="Workflow progress">
+      @for (t of track().tiers; track t; let last = $last) {
+        <li class="al__tier" [class.al__tier--current]="last" [attr.aria-current]="last ? 'step' : null">
+          <span class="al__pill">{{ t }}</span>
+          @if (last) {
+            @if (track().stage) {
+              <span class="al__state">{{ track().stage }}</span>
+            }
+            @if (track().subprocess) {
+              <span class="al__state">{{ track().subprocess }}</span>
+            }
+          }
+        </li>
+      }
+    </ol>
+  }
+
+  <table class="al__table">
+    <caption class="al__sr">
+      Audit log, oldest first
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Category</th>
+        <th scope="col">Description</th>
+        <th scope="col">Component</th>
+        <th scope="col">Who</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (e of rows(); track e.eventId) {
+        <tr class="al__row" [attr.data-category]="tone(e)">
+          <td><span class="al__dot" aria-hidden="true"></span>{{ category(e) }}</td>
+          <td>{{ e.detail }}</td>
+          <td>{{ e.component ?? '-' }}</td>
+          <td>
+            {{ e.actor }}
+            <time class="al__when" [attr.datetime]="e.at">{{ e.at | date: 'MMM d, y, HH:mm' : 'UTC' }} UTC</time>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="4" class="al__empty">
+            {{ query() ? 'No events match "' + query() + '".' : 'No audit events.' }}
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

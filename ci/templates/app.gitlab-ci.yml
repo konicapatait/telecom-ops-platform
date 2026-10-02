@@ -1,0 +1,90 @@
+# Job templates every app pipeline extends (apps/<app>/.gitlab-ci.yml). Each job works on ONE app: $APP.
+# Build once, promote: the `production` artifact goes to staging and prod unchanged; the `mock` artifact goes to dev.
+
+include:
+  - local: ci/templates/base.gitlab-ci.yml
+
+stages: [verify, build, deploy-dev, smoke-dev, deploy-staging, deploy-prod, rollback]
+
+variables:
+  DEPLOY_PROVIDER: s3          # s3 | local (local = dry run into dist/deploy/<env>)
+
+.app-lint:
+  extends: .node
+  stage: verify
+  script:
+    - npx nx lint $APP
+
+.app-test:
+  extends: .node
+  stage: verify
+  script:
+    - npx nx test $APP --coverage
+  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
+
+.app-build:
+  extends: .node
+  stage: build
+  script:
+    - npx nx build $APP --configuration=production
+    - npx nx build $APP --configuration=mock
+    - node tools/scripts/check-no-mocks-in-prod.mjs dist/apps/$APP
+  artifacts:
+    paths: [dist/apps/$APP/, dist/apps-mock/$APP/]
+    expire_in: 30 days
+
+.app-deploy:
+  extends: .node
+  resource_group: manifest-$DEPLOY_ENV          # serialise manifest read-modify-write per environment
+  script:
+    - node tools/ci/deploy-app.mjs --app $APP --env $DEPLOY_ENV --version $CI_COMMIT_SHORT_SHA --provider $DEPLOY_PROVIDER
+  environment:
+    name: $DEPLOY_ENV/$APP
+
+.app-deploy-dev:
+  extends: .app-deploy
+  stage: deploy-dev
+  variables: { DEPLOY_ENV: dev }
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "web"
+
+.app-contract-smoke:
+  extends: .node
+  stage: smoke-dev
+  script:
+    - node tools/ci/contract-smoke.mjs --app $APP --env $DEPLOY_ENV --provider $DEPLOY_PROVIDER
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "web"
+
+.app-deploy-staging:
+  extends: .app-deploy
+  stage: deploy-staging
+  variables: { DEPLOY_ENV: staging }
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
+      allow_failure: true
+
+.app-deploy-prod:
+  extends: .app-deploy
+  stage: deploy-prod
+  variables: { DEPLOY_ENV: prod }
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
+      allow_failure: true
+
+.app-rollback:
+  extends: .node
+  stage: rollback
+  resource_group: manifest-$DEPLOY_ENV
+  script:
+    - node tools/ci/rollback-app.mjs --app $APP --env $DEPLOY_ENV --provider $DEPLOY_PROVIDER ${ROLLBACK_TO:+--to $ROLLBACK_TO}
+  environment:
+    name: $DEPLOY_ENV/$APP
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
+      allow_failure: true

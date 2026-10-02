@@ -1,0 +1,119 @@
+{
+  "name": "mfe-reporting",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/mfe-reporting/src",
+  "prefix": "reporting",
+  "tags": ["type:app", "family:reporting", "kind:domain"],
+  "targets": {
+    "build": {
+      "executor": "@angular-architects/native-federation:build",
+      "outputs": ["{workspaceRoot}/dist/apps/mfe-reporting", "{workspaceRoot}/dist/apps-mock/mfe-reporting"],
+      "options": {},
+      "configurations": {
+        "production": {
+          "target": "mfe-reporting:esbuild:production"
+        },
+        "mock": {
+          "target": "mfe-reporting:esbuild:mock"
+        },
+        "development": {
+          "target": "mfe-reporting:esbuild:development",
+          "dev": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "esbuild": {
+      "executor": "@angular/build:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/mfe-reporting",
+        "index": "apps/mfe-reporting/src/index.html",
+        "browser": "apps/mfe-reporting/src/main.ts",
+        "polyfills": ["es-module-shims"],
+        "tsConfig": "apps/mfe-reporting/tsconfig.app.json",
+        "assets": [],
+        "styles": []
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "anyScript",
+              "maximumWarning": "150kb",
+              "maximumError": "300kb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all",
+          "fileReplacements": [
+            {
+              "replace": "apps/mfe-reporting/src/environments/environment.ts",
+              "with": "apps/mfe-reporting/src/environments/environment.prod.ts"
+            },
+            {
+              "replace": "apps/mfe-reporting/src/start-mocks.ts",
+              "with": "apps/mfe-reporting/src/start-mocks.prod.ts"
+            }
+          ]
+        },
+        "mock": {
+          "outputPath": "dist/apps-mock/mfe-reporting",
+          "outputHashing": "all",
+          "fileReplacements": [
+            {
+              "replace": "apps/mfe-reporting/src/environments/environment.ts",
+              "with": "apps/mfe-reporting/src/environments/environment.mock.ts"
+            }
+          ]
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "assets": [
+            {
+              "glob": "mockServiceWorker.js",
+              "input": "libs/mocks/assets",
+              "output": "/"
+            }
+          ],
+          "styles": ["node_modules/@org/design-tokens/tokens.css", "node_modules/@org/design-tokens/reset.css"]
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-architects/native-federation:build",
+      "continuous": true,
+      "options": {
+        "target": "mfe-reporting:serve-original:development",
+        "rebuildDelay": 500,
+        "dev": true,
+        "cacheExternalArtifacts": false,
+        "port": 0
+      }
+    },
+    "serve-original": {
+      "executor": "@angular/build:dev-server",
+      "continuous": true,
+      "options": {
+        "port": 4216
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "mfe-reporting:esbuild:production"
+        },
+        "development": {
+          "buildTarget": "mfe-reporting:esbuild:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    }
+  }
+}

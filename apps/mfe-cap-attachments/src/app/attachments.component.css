@@ -1,0 +1,36 @@
+.att__upload {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-3);
+  flex-wrap: wrap;
+  padding: var(--ds-space-3);
+  margin-bottom: var(--ds-space-4);
+  border: 1px dashed var(--ds-color-border);
+  border-radius: var(--ds-radius-md);
+}
+.att__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+.att {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--ds-color-surface);
+  border: 1px solid var(--ds-color-border);
+}
+th,
+td {
+  text-align: left;
+  padding: var(--ds-space-2) var(--ds-space-3);
+  border-bottom: 1px solid var(--ds-color-border);
+}
+th {
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-text-muted);
+}
+.att__name {
+  font-weight: 600;
+}

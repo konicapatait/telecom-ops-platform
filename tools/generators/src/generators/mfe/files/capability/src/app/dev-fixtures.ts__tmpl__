@@ -1,0 +1,11 @@
+/**
+ * @file DEV_FIXTURE_CASES token for <%= projectName %>'s dev harness; provided only by start-mocks.ts (empty in production).
+ */
+import { InjectionToken } from '@angular/core';
+import type { CaseSummary } from '@platform/contracts';
+
+/**
+ * Cases the dev harness can pick from. Provided by start-mocks.ts from @platform/mocks;
+ * empty in production builds, so no fixture id ever reaches a production bundle (ADR-0006).
+ */
+export const DEV_FIXTURE_CASES = new InjectionToken<readonly CaseSummary[]>('DEV_FIXTURE_CASES', { factory: () => [] });

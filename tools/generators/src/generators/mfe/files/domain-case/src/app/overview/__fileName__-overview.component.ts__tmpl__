@@ -1,0 +1,23 @@
+/**
+ * @file <%= label %> triggering info, exposed as './<%= className %>Overview' and mounted by the shared case tab host.
+ */
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { DsEmptyState } from '@org/design-system';
+import type { CaseType } from '@platform/contracts';
+
+/**
+ * Domain-owned panel, exposed as './<%= className %>Overview' and mounted by the case tab host like any capability.
+ * Fetch this domain's data here (e.g. GET /api/<%= route %>/cases/:caseId/overview).
+ */
+@Component({
+  selector: '<%= prefix %>-overview',
+  imports: [DsEmptyState],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `<ds-empty-state icon="info" heading="<%= label %> overview" [message]="'Build the domain panel for ' + caseId() + ' here.'" />`,
+})
+export class <%= className %>OverviewComponent {
+  readonly caseId = input.required<string>();
+  readonly caseType = input.required<CaseType>();
+}
+
+export default <%= className %>OverviewComponent;

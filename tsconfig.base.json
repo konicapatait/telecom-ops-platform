@@ -1,0 +1,74 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "bundler",
+    "module": "preserve",
+    "emitDecoratorMetadata": false,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "isolatedModules": true,
+    "target": "ES2022",
+    "lib": [
+      "ES2022",
+      "dom",
+      "dom.iterable"
+    ],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@platform/auth": [
+        "libs/auth/src/index.ts"
+      ],
+      "@platform/auth-mock": [
+        "libs/auth/mock/src/index.ts"
+      ],
+      "@platform/case-workspace": [
+        "libs/case-workspace/src/index.ts"
+      ],
+      "@platform/contracts": [
+        "libs/contracts/src/index.ts"
+      ],
+      "@platform/entitlements": [
+        "libs/entitlements/src/index.ts"
+      ],
+      "@platform/layout-360": [
+        "libs/layout-360/src/index.ts"
+      ],
+      "@platform/mf-manifest": [
+        "libs/mf-manifest/src/index.ts"
+      ],
+      "@platform/mocks": [
+        "libs/mocks/src/index.ts"
+      ],
+      "@platform/mocks/fixtures": [
+        "libs/mocks/src/fixtures/index.ts"
+      ],
+      "@platform/tools": [
+        "tools/generators/src/index.ts"
+      ],
+      "@platform/utils": [
+        "libs/utils/src/index.ts"
+      ]
+    }
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true
+  },
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
+}

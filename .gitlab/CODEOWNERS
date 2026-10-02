@@ -1,0 +1,43 @@
+# GitLab CODEOWNERS. Merge requests touching these paths need approval from the listed owners.
+# New apps are appended by `nx g @platform/tools:mfe` (pass --owner=@group/team).
+
+[Platform] @telecom/platform-team
+*                                   @telecom/platform-team
+/libs/contracts/                    @telecom/platform-owner
+/libs/mf-manifest/                  @telecom/platform-owner
+/eslint.config.mjs                  @telecom/platform-owner
+/ci/                                @telecom/platform-owner
+/.gitlab-ci.yml                     @telecom/platform-owner
+/docs/adr/                          @telecom/platform-owner
+
+[Shared libs] @telecom/platform-team
+/libs/auth/                         @telecom/platform-team
+/libs/entitlements/                 @telecom/platform-team
+/libs/utils/                        @telecom/platform-team
+/libs/mocks/                        @telecom/platform-team
+/libs/auth/mock/                    @telecom/platform-team
+/tools/                             @telecom/platform-team
+
+[Layouts]
+# libs/case-workspace is owned by the case-management team (resolved decision). Created in Phase 2.
+/libs/case-workspace/               @telecom/case-management-team
+/libs/layout-360/                   @telecom/customer-360-team
+
+[Apps]
+/apps/shell/                        @telecom/platform-team
+/apps/mfe-fraud/ @telecom/fraud-team
+/apps/mfe-cap-audit-trail/ @telecom/case-management-team
+/apps/mfe-cap-usage-billing/ @telecom/billing-team
+/apps/mfe-cap-attachments/ @telecom/case-management-team
+/apps/mfe-cap-case-resolution/ @telecom/case-management-team
+/apps/mfe-billing-disputes/ @telecom/billing-team
+/apps/mfe-service-assurance/ @telecom/network-ops-team
+/apps/mfe-number-porting/ @telecom/porting-team
+/apps/mfe-partner-oversight/ @telecom/partner-team
+/apps/mfe-cap-account-view/ @telecom/customer-360-team
+/apps/mfe-cap-case-search/ @telecom/case-management-team
+/apps/mfe-case-management/ @telecom/case-management-team
+/apps/mfe-cap-subscriber-search/ @telecom/customer-360-team
+/apps/mfe-subscriber-view/ @telecom/customer-360-team
+/apps/mfe-partner-view/ @telecom/partner-team
+/apps/mfe-reporting/ @telecom/insights-team

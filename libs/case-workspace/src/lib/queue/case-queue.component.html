@@ -1,0 +1,72 @@
+<div class="cw-queue__head">
+  <h2 class="cw-queue__title">
+    {{ queueTitle }}
+    @if (customer(); as c) {
+      <span class="cw-queue__for">for {{ c.displayName }}</span>
+    }
+  </h2>
+  <ds-select label="Status" [options]="statusOptions" [value]="status()" (valueChange)="filter($event)" />
+</div>
+
+@if (cases.isLoading() && !cases.hasValue()) {
+  <ds-skeleton variant="panel" />
+} @else if (cases.error()) {
+  <ds-empty-state
+    icon="warning"
+    heading="The queue could not be loaded"
+    actionLabel="Retry"
+    (action)="cases.reload()"
+  />
+} @else if (!rows().length) {
+  <ds-empty-state icon="empty" [heading]="'No ' + queueTitle.toLowerCase()" message="Nothing matches this filter." />
+} @else {
+  <table class="cw-queue">
+    <caption class="cw-queue__caption">
+      {{
+        cases.value()?.total
+      }}
+      alerts · page
+      {{
+        page() + 1
+      }}
+      of
+      {{
+        pages()
+      }}
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col">Case</th>
+        <th scope="col">Priority</th>
+        <th scope="col">Subject</th>
+        <th scope="col">Type</th>
+        <th scope="col">Status</th>
+        <th scope="col">Opened</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (c of rows(); track c.caseId) {
+        <tr>
+          <td>
+            <a [routerLink]="['cases', c.caseId]" class="cw-queue__id">{{ c.caseId }}</a>
+          </td>
+          <td>
+            <ds-badge [tone]="tone(c.priority)">{{ c.priority }}</ds-badge>
+          </td>
+          <td>
+            {{ c.subject.displayName }}<span class="cw-queue__muted">{{ c.subject.msisdn }}</span>
+          </td>
+          <td>{{ typeLabel(c) }}</td>
+          <td>{{ c.status.replace('_', ' ') }}</td>
+          <td>{{ c.openedAt | date: 'MMM d, HH:mm' : 'UTC' }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+  <nav class="cw-queue__pager" aria-label="Queue pages">
+    <button dsButton size="sm" type="button" [disabled]="page() === 0" (click)="page.set(page() - 1)">Previous</button>
+    <button dsButton size="sm" type="button" [disabled]="page() + 1 >= pages()" (click)="page.set(page() + 1)">
+      Next
+    </button>
+  </nav>
+}

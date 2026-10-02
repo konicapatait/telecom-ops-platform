@@ -1,0 +1,6 @@
+/dist
+/coverage
+/.nx
+/vendor
+libs/mocks/assets/mockServiceWorker.js
+apps/*/tsconfig.federation.json

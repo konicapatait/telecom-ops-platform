@@ -1,0 +1,35 @@
+<h1 class="cm__title">Case management</h1>
+
+<casemanagement-customer-overview
+  [customer]="overviewCustomer()"
+  [mode]="overviewMode()"
+  (selectCustomer)="focus($event)"
+  (clearCustomer)="unfocus()"
+/>
+
+@if (customer() === null) {
+  <p class="cm__warn" role="alert">That customer could not be found. Showing every case.</p>
+}
+
+<nav class="cm__tabs" aria-label="Case domains">
+  @for (t of tabs(); track t.id) {
+    <a
+      class="cm__tab"
+      [href]="href(t)"
+      (click)="go($event, t)"
+      [attr.aria-current]="isActive(t) ? 'page' : null"
+      [attr.data-tab]="t.id"
+    >
+      {{ t.label }}
+      @if (count(t)) {
+        <ds-badge tone="info" [attr.aria-label]="count(t) + ' open'">{{ count(t) }}</ds-badge>
+      }
+    </a>
+  } @empty {
+    <p class="cm__warn">You have no access to any case domain.</p>
+  }
+</nav>
+
+<section class="cm__panel">
+  <router-outlet />
+</section>

@@ -1,0 +1,107 @@
+:host {
+  display: block;
+}
+.l360__banner {
+  padding: var(--ds-space-4) var(--ds-space-5);
+  background: var(--ds-color-surface);
+  border: 1px solid var(--ds-color-border);
+  border-left: 4px solid var(--ds-color-primary);
+  border-radius: var(--ds-radius-md);
+  margin-bottom: var(--ds-space-4);
+}
+.l360__title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  flex-wrap: wrap;
+}
+.l360__title {
+  margin: 0;
+  font-size: var(--ds-font-size-xl);
+}
+.l360__subtitle {
+  margin: var(--ds-space-1) 0 0;
+  color: var(--ds-color-text-muted);
+}
+.l360__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-2) var(--ds-space-6);
+  margin: var(--ds-space-3) 0 0;
+}
+.l360__facts dt {
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-text-muted);
+}
+.l360__facts dd {
+  margin: 0;
+}
+
+.l360__kpis {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--ds-space-4);
+  display: grid;
+  gap: var(--ds-space-3);
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+.l360__kpi {
+  display: grid;
+  gap: 2px;
+  padding: var(--ds-space-3) var(--ds-space-4);
+  background: var(--ds-color-surface);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-md);
+}
+.l360__kpi[data-tone='good'] {
+  border-top: 3px solid var(--ds-color-success);
+}
+.l360__kpi[data-tone='warning'] {
+  border-top: 3px solid var(--ds-color-warning);
+}
+.l360__kpi[data-tone='danger'] {
+  border-top: 3px solid var(--ds-color-danger);
+}
+.l360__kpi-value {
+  font-size: 24px;
+  font-weight: 700;
+}
+.l360__kpi-label {
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-text-muted);
+}
+.l360__kpi-hint {
+  font-size: var(--ds-font-size-sm);
+  color: var(--ds-color-text-muted);
+}
+
+.l360__grid {
+  display: grid;
+  gap: var(--ds-space-4);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.l360__section {
+  padding: var(--ds-space-4);
+  background: var(--ds-color-surface);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-md);
+  min-width: 0;
+}
+.l360__section[data-span='2'] {
+  grid-column: span 2;
+}
+.l360__section[data-span='3'] {
+  grid-column: span 3;
+}
+.l360__section-title {
+  margin: 0 0 var(--ds-space-3);
+  font-size: var(--ds-font-size-lg);
+}
+@media (max-width: 1100px) {
+  .l360__grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .l360__section[data-span] {
+    grid-column: auto;
+  }
+}

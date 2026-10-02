@@ -1,0 +1,39 @@
+# shell pipeline. Hand-written (the host is not generated); job bodies live in ci/templates/app.gitlab-ci.yml.
+# Included into the child pipeline only when shell is affected, or when run on its own with APP=shell.
+
+shell:lint:
+  extends: .app-lint
+  variables: { APP: shell }
+
+shell:test:
+  extends: .app-test
+  variables: { APP: shell }
+
+shell:build:
+  extends: .app-build
+  variables: { APP: shell }
+
+shell:deploy:dev:
+  extends: .app-deploy-dev
+  variables: { APP: shell }
+  needs: ['shell:build', 'shell:lint', 'shell:test']
+
+shell:smoke:dev:
+  extends: .app-contract-smoke
+  variables: { APP: shell, DEPLOY_ENV: dev }
+  needs: ['shell:deploy:dev']
+
+shell:deploy:staging:
+  extends: .app-deploy-staging
+  variables: { APP: shell }
+  needs: ['shell:build', 'shell:smoke:dev']
+
+shell:deploy:prod:
+  extends: .app-deploy-prod
+  variables: { APP: shell }
+  needs: ['shell:build', 'shell:deploy:staging']
+
+shell:rollback:prod:
+  extends: .app-rollback
+  variables: { APP: shell, DEPLOY_ENV: prod }
+  needs: []

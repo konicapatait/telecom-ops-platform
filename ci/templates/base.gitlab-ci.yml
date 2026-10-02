@@ -1,0 +1,22 @@
+# Shared building blocks for the root and child pipelines.
+
+.node:
+  image: node:22.23-bookworm
+  variables:
+    npm_config_cache: $CI_PROJECT_DIR/.npm
+    NX_DAEMON: "false"
+    NX_NO_CLOUD: "true"
+  cache:
+    - key: { files: [package-lock.json] }
+      paths: [.npm/]
+      policy: pull-push
+    - key: nx-$CI_COMMIT_REF_SLUG
+      paths: [.nx/cache]
+  before_script:
+    - npm ci --prefer-offline --no-audit --no-fund
+    # Base/head for `nx affected`: MR diff base, else previous commit on the branch.
+    - export NX_HEAD=$CI_COMMIT_SHA
+    - |
+      if [ -n "$CI_MERGE_REQUEST_DIFF_BASE_SHA" ]; then export NX_BASE=$CI_MERGE_REQUEST_DIFF_BASE_SHA;
+      elif [ -n "$CI_COMMIT_BEFORE_SHA" ] && [ "$CI_COMMIT_BEFORE_SHA" != "0000000000000000000000000000000000000000" ]; then export NX_BASE=$CI_COMMIT_BEFORE_SHA;
+      else export NX_BASE=HEAD~1; fi

@@ -1,0 +1,8 @@
+{
+  "name": "entitlements",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/entitlements/src",
+  "projectType": "library",
+  "tags": ["type:shared-lib", "scope:shared"],
+  "targets": {}
+}

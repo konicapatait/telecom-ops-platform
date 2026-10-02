@@ -1,0 +1,18 @@
+/**
+ * @file Routes of <%= projectName %>, exposed to the shell as './Routes'.
+ */
+import type { Routes } from '@angular/router';
+import { entitlementGuard } from '@platform/entitlements';
+import { <%= className %>HomeComponent } from './<%= fileName %>-home.component';
+
+/**
+ * Exposed as './Routes'. The shell mounts it at /<%= route %>.<% if (family === 'case') { %>
+ * Phase 2: wrap children in CaseWorkspaceLayoutComponent from libs/case-workspace with provideCaseDomain(...).<% } %>
+ */
+export default [
+  {
+    path: '',
+    canActivate: [entitlementGuard('<%= entitlement %>')],
+    children: [{ path: '', component: <%= className %>HomeComponent, title: '<%= label %>' }],
+  },
+] satisfies Routes;

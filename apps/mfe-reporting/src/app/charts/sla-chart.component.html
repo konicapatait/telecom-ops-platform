@@ -1,0 +1,67 @@
+<div class="chart" role="group" aria-label="Share of cases closed within SLA, by case domain">
+  <svg [attr.width]="width()" [attr.height]="height()" aria-hidden="true">
+    @for (t of ticks; track t) {
+      <line class="chart__grid" [attr.x1]="x(t)" [attr.x2]="x(t)" [attr.y1]="m.top" [attr.y2]="height() - m.bottom" />
+      <text class="chart__axis" [attr.x]="x(t)" [attr.y]="height() - 6" text-anchor="middle">{{ t }}%</text>
+    }
+    <line
+      class="chart__target"
+      [attr.x1]="x(target())"
+      [attr.x2]="x(target())"
+      [attr.y1]="m.top - 6"
+      [attr.y2]="height() - m.bottom"
+    />
+    <text class="chart__axis" [attr.x]="x(target())" [attr.y]="m.top - 10" text-anchor="middle">
+      Target {{ target() }}%
+    </text>
+    @for (r of rows(); track r.group.id; let i = $index) {
+      <text class="chart__category" [attr.x]="m.left - 10" [attr.y]="y(i) + bar / 2 + 4" text-anchor="end">
+        {{ r.group.label }}
+      </text>
+      <path
+        class="chart__bar"
+        [class.chart__bar--hover]="hover() === r.group.id"
+        [attr.d]="barPath(i, pct(r.totals))"
+        [style.fill]="'var(--series-' + r.group.slot + ')'"
+      />
+      <text class="chart__value" [attr.x]="x(pct(r.totals)) + 6" [attr.y]="y(i) + bar / 2 + 4">
+        {{ r.totals.slaPct === null ? '–' : (r.totals.slaPct | number: '1.1-1') + '%' }}
+      </text>
+    }
+  </svg>
+  <!-- focusable hit targets (bigger than the bar: full row) -->
+  @for (r of rows(); track r.group.id; let i = $index) {
+    <button
+      type="button"
+      class="chart__bar-hit"
+      [style.top.px]="y(i) - 4"
+      [style.height.px]="bar + 8"
+      [style.left.px]="0"
+      [style.width.px]="width()"
+      [attr.aria-label]="
+        r.group.label +
+        ': ' +
+        (r.totals.slaPct === null
+          ? 'no closed cases'
+          : (r.totals.slaPct | number: '1.1-1') + '% within SLA, ' + r.totals.breached + ' breaches')
+      "
+      (pointerenter)="hover.set(r.group.id)"
+      (pointerleave)="hover.set(null)"
+      (focus)="hover.set(r.group.id)"
+      (blur)="hover.set(null)"
+    ></button>
+  }
+  @if (tip(); as t) {
+    <div class="chart__tooltip" role="status" [style.left.px]="t.left" [style.top.px]="t.top">
+      <div class="chart__tooltip-title">{{ t.r.group.label }}</div>
+      <div class="chart__tooltip-row">
+        <strong>{{ t.r.totals.slaPct === null ? '–' : (t.r.totals.slaPct | number: '1.1-1') + '%' }}</strong
+        ><span>within SLA</span>
+      </div>
+      <div class="chart__tooltip-row">
+        <strong>{{ t.r.totals.breached }}</strong
+        ><span>breaches of {{ t.r.totals.closed }} closed</span>
+      </div>
+    </div>
+  }
+</div>

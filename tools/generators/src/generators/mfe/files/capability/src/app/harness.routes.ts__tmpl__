@@ -1,0 +1,7 @@
+/**
+ * @file Routes of <%= projectName %>'s standalone dev harness, mirroring how the shell mounts it.
+ */
+import type { Routes } from '@angular/router';
+
+/** Capabilities are not routed; the harness renders the component directly. */
+export const HARNESS_ROUTES: Routes = [];

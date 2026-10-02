@@ -1,0 +1,9 @@
+{
+  "environment": "local",
+  "okta": {
+    "issuer": "https://example.okta.com/oauth2/default",
+    "clientId": "REPLACE_WITH_SPA_CLIENT_ID",
+    "redirectPath": "/login/callback"
+  },
+  "logEndpoint": null
+}

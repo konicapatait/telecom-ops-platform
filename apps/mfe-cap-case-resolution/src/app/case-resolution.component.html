@@ -1,0 +1,71 @@
+<div class="dec">
+  <div class="dec__main">
+    <h2 class="dec__h">Case decision</h2>
+    @if (existing.isLoading() && !existing.hasValue()) {
+      <ds-skeleton />
+    } @else if (existing.error()) {
+      <ds-empty-state
+        icon="warning"
+        heading="Decision status unavailable"
+        actionLabel="Retry"
+        (action)="existing.reload()"
+      />
+    } @else if (existing.value(); as r) {
+      <div class="dec__done" role="status">
+        <strong>Resolved: {{ label(r.code) }}</strong>
+        @if (r.note) {
+          <p class="dec__note">{{ r.note }}</p>
+        }
+        <p class="dec__muted">{{ r.resolvedBy }} · {{ r.resolvedAt | date: 'MMM d, y, HH:mm' : 'UTC' }} UTC</p>
+      </div>
+    } @else if (!canResolve()) {
+      <div class="dec__pending" role="status">
+        <strong>No decision yet</strong>
+        <p class="dec__muted">
+          The decision will appear here once it is recorded. Recording one needs the case:resolve entitlement.
+        </p>
+      </div>
+    } @else {
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <fieldset class="dec__codes">
+          <legend>Outcome</legend>
+          @for (c of resolutionCodes(); track c.code) {
+            <label class="dec__code">
+              <input type="radio" formControlName="code" [value]="c.code" />
+              <span>{{ c.label }}</span>
+              @if (c.requiresNote) {
+                <span class="dec__muted">· note required</span>
+              }
+            </label>
+          }
+          @if (submitted() && form.controls.code.invalid) {
+            <p class="dec__error" role="alert">Choose an outcome.</p>
+          }
+        </fieldset>
+
+        <label class="dec__label" for="res-note">Note{{ noteRequired() ? ' (required)' : ' (optional)' }}</label>
+        <textarea id="res-note" formControlName="note" rows="4" [attr.aria-required]="noteRequired()"></textarea>
+        @if (submitted() && form.hasError('noteRequired')) {
+          <p class="dec__error" role="alert">A note is required for this outcome.</p>
+        }
+        @if (serverError(); as e) {
+          <p class="dec__error" role="alert">{{ e }}</p>
+        }
+
+        <button dsButton variant="primary" type="submit" [disabled]="submitting()">
+          {{ submitting() ? 'Resolving…' : 'Resolve case' }}
+        </button>
+      </form>
+    }
+  </div>
+  <aside class="dec__codes-ref" aria-label="Outcomes for this domain">
+    <h3 class="dec__sub">Outcomes for this case type</h3>
+    <ul>
+      @for (c of resolutionCodes(); track c.code) {
+        <li>
+          <code>{{ c.code }}</code> {{ c.label }}
+        </li>
+      }
+    </ul>
+  </aside>
+</div>

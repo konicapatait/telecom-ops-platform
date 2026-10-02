@@ -1,0 +1,18 @@
+/**
+ * @file Routes of <%= projectName %>, exposed to the shell as './Routes'.
+ */
+import type { Routes } from '@angular/router';
+import { entitlementGuard } from '@platform/entitlements';
+import { <%= className %>ProfileComponent } from './<%= fileName %>-profile.component';
+
+/** Exposed as './Routes'. The shell mounts it at /<%= route %>; a profile lives at /<%= route %>/:profileId. */
+export default [
+  {
+    path: '',
+    canActivate: [entitlementGuard('<%= entitlement %>')],
+    children: [
+      { path: ':profileId', component: <%= className %>ProfileComponent, title: '<%= label %>' },
+      { path: '', pathMatch: 'full', redirectTo: '/' },
+    ],
+  },
+] satisfies Routes;

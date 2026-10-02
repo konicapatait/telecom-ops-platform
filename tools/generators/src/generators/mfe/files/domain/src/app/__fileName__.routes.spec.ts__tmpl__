@@ -1,0 +1,12 @@
+import routes from './<%= fileName %>.routes';
+import { <%= className %>HomeComponent } from './<%= fileName %>-home.component';
+
+describe('<%= projectName %> exposed routes', () => {
+  it('guards the section with an entitlement', () => {
+    expect(routes[0].canActivate?.length).toBe(1);
+  });
+
+  it('renders the home page at the root', () => {
+    expect(routes[0].children?.[0].component).toBe(<%= className %>HomeComponent);
+  });
+});

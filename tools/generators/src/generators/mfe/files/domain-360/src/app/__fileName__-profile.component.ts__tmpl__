@@ -1,0 +1,48 @@
+/**
+ * @file <%= label %> profile on the shared 360 layout (ADR-0024).
+ */
+import { HttpClient } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { DsEmptyState, DsSkeleton } from '@org/design-system';
+import type { CustomerSummary } from '@platform/contracts';
+import { L360SectionDirective, Layout360Component, type Kpi360, type Profile360 } from '@platform/layout-360';
+import { <%= constName %>_SECTIONS } from './<%= fileName %>.sections';
+
+/** <%= label %> profile on the shared 360 layout (ADR-0024). Replace the generic banner/KPIs with domain data. */
+@Component({
+  selector: '<%= prefix %>-profile',
+  imports: [Layout360Component, L360SectionDirective, DsSkeleton, DsEmptyState],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    @if (summary.isLoading()) {
+      <ds-skeleton variant="panel" />
+    } @else if (summary.value(); as s) {
+      <l360-layout [profile]="profile()!" [kpis]="kpis()" [sections]="sections" [panelInputs]="{ profileId: s.customerId }">
+        <ng-template l360Section="open-cases"><p>Build the open-cases panel for {{ s.displayName }} here.</p></ng-template>
+      </l360-layout>
+    } @else {
+      <ds-empty-state icon="empty" heading="Profile not found" />
+    }
+  `,
+})
+export class <%= className %>ProfileComponent {
+  /** Route param :profileId (withComponentInputBinding). */
+  readonly profileId = input.required<string>();
+  protected readonly sections = <%= constName %>_SECTIONS;
+  private readonly http = inject(HttpClient);
+
+  protected readonly summary = rxResource({
+    params: () => this.profileId(),
+    stream: ({ params }) => this.http.get<CustomerSummary>(`/api/customers/${encodeURIComponent(params)}`),
+  });
+  protected readonly profile = computed<Profile360 | null>(() => {
+    const s = this.summary.value();
+    return s ? { title: s.displayName, subtitle: s.customerId, badges: [{ label: s.status }] } : null;
+  });
+  protected readonly kpis = computed<Kpi360[]>(() => {
+    const s = this.summary.value();
+    const open = s ? Object.values(s.openCasesByDomain).reduce((a, b) => a + (b ?? 0), 0) : 0;
+    return [{ label: 'Open cases', value: String(open) }];
+  });
+}

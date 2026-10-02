@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "$id": "PlatformMfe",
+  "title": "Create a federation remote",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Short name, e.g. 'fraud' or 'audit-trail'. Becomes mfe-<name> (domain) or mfe-cap-<name> (capability). A name that already starts with 'mfe-' is used as is.",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "Remote name (e.g. fraud, audit-trail)?"
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["domain", "capability", "hub"],
+      "description": "domain = a section exposing ./Routes (case, 360 or reporting family; case domains are mounted as tabs of the case-management hub). capability = one component for case tabs/panels. hub = a section that hosts other domain remotes as tabs (e.g. mfe-case-management).",
+      "x-prompt": {
+        "message": "Kind?",
+        "type": "list",
+        "items": ["domain", "capability", "hub"]
+      }
+    },
+    "family": {
+      "type": ["string", "number"],
+      "enum": ["case", "360", "reporting", 360],
+      "description": "Layout family (domain only). Decides which layout lib the app may import and its nav group. (`--family=360` is parsed as a number by the CLI; both forms are accepted.)",
+      "default": "case"
+    },
+    "caseDomain": {
+      "type": "string",
+      "enum": [
+        "FRAUD",
+        "BILLING_DISPUTE",
+        "SERVICE_ASSURANCE",
+        "NUMBER_PORTING",
+        "PARTNER_ONBOARDING",
+        "PARTNER_ONGOING",
+        "PARTNER_FIELD_AUDIT"
+      ],
+      "description": "Case family only (required there): the CaseDomain this section serves. Drives the generated CaseDomainConfig and the shell's case-search routing."
+    },
+    "route": {
+      "type": "string",
+      "description": "Domain only: URL segment under the shell (default: name)."
+    },
+    "label": {
+      "type": "string",
+      "description": "Domain only: left-nav label (default: Title Case of name)."
+    },
+    "entitlement": {
+      "type": "string",
+      "description": "Domain only: entitlement to see the section (default: '<route>:view')."
+    },
+    "exposedName": {
+      "type": "string",
+      "description": "Capability only: exposed module name, e.g. 'AuditTrail' -> './AuditTrail' (default: PascalCase of name)."
+    },
+    "port": {
+      "type": "number",
+      "description": "Local dev-server port (default: next free port from the local manifest, starting at 4201)."
+    },
+    "owner": {
+      "type": "string",
+      "description": "CODEOWNERS owner, e.g. '@telecom/fraud-team'.",
+      "default": "@telecom/platform-team"
+    },
+    "skipFormat": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": ["name", "kind"]
+}

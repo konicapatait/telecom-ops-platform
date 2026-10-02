@@ -1,0 +1,8 @@
+{
+  "name": "layout-360",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/layout-360/src",
+  "projectType": "library",
+  "tags": ["type:layout", "family:360"],
+  "targets": {}
+}

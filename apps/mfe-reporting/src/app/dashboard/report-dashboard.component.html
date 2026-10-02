@@ -1,0 +1,156 @@
+<header class="rd__head">
+  <h1 class="rd__title">Reports</h1>
+  <p class="rd__subtitle">Case volume and SLA attainment by case domain</p>
+</header>
+
+<!-- One row of filters, above everything they scope. Date range first. -->
+<form class="rd__filters" aria-label="Report filters" (submit)="$event.preventDefault()">
+  <label class="rd__field">
+    <span>Period</span>
+    <select [value]="preset()" (change)="choosePreset($any($event.target).value)">
+      @for (p of presets; track p.id) {
+        <option [value]="p.id">{{ p.label }}</option>
+      }
+      <option value="custom">Custom range</option>
+    </select>
+  </label>
+  <label class="rd__field">
+    <span>From</span>
+    <input
+      type="date"
+      [value]="range().from"
+      [max]="range().to"
+      (change)="setDate('from', $any($event.target).value)"
+    />
+  </label>
+  <label class="rd__field">
+    <span>To</span>
+    <input type="date" [value]="range().to" [min]="range().from" (change)="setDate('to', $any($event.target).value)" />
+  </label>
+  <fieldset class="rd__groups">
+    <legend>Case domains</legend>
+    @for (g of allGroups; track g.id) {
+      <label class="rd__group">
+        <input type="checkbox" [checked]="isSelected(g)" (change)="toggle(g, $any($event.target).checked)" />
+        <span class="rd__swatch" [style.background]="'var(--series-' + g.slot + ')'"></span>
+        {{ g.label }}
+      </label>
+    }
+  </fieldset>
+</form>
+
+@if (error() && !rows()) {
+  <ds-empty-state
+    icon="warning"
+    heading="Reports could not be loaded"
+    [message]="error()?.status === 403 ? 'You need the reports:view entitlement.' : 'Try again in a moment.'"
+    actionLabel="Retry"
+    (action)="retry()"
+  />
+} @else if (!selected().length) {
+  <ds-empty-state
+    icon="empty"
+    heading="No case domain selected"
+    message="Select at least one case domain to see the reports."
+  />
+} @else if (rows(); as data) {
+  <div class="rd__body" [class.rd__body--loading]="loading()" [attr.aria-busy]="loading()">
+    <!-- Headline numbers: stat tiles, not charts -->
+    <ul class="rd__tiles" aria-label="Totals for the period">
+      <li class="rd__tile">
+        <span class="rd__tile-value">{{ totals().opened | number }}</span
+        ><span class="rd__tile-label">Cases opened</span>
+      </li>
+      <li class="rd__tile">
+        <span class="rd__tile-value">{{ totals().closed | number }}</span
+        ><span class="rd__tile-label">Cases closed</span>
+      </li>
+      <li class="rd__tile">
+        <span class="rd__tile-value">{{
+          totals().slaPct === null ? '–' : (totals().slaPct | number: '1.1-1') + '%'
+        }}</span>
+        <span class="rd__tile-label">Closed within SLA</span>
+        @if (totals().slaPct !== null && totals().slaPct! < target) {
+          <span class="rd__status rd__status--warning"
+            ><span aria-hidden="true">▲</span> Below {{ target }}% target</span
+          >
+        } @else if (totals().slaPct !== null) {
+          <span class="rd__status rd__status--good"><span aria-hidden="true">✓</span> On target</span>
+        }
+      </li>
+      <li class="rd__tile">
+        <span class="rd__tile-value">{{ totals().breached | number }}</span
+        ><span class="rd__tile-label">SLA breaches</span>
+      </li>
+    </ul>
+
+    <div class="rd__grid">
+      <section class="rd__card rd__card--wide" aria-labelledby="rd-volume">
+        <h2 class="rd__card-title" id="rd-volume">Cases opened per week</h2>
+        @if (series().weeks.length) {
+          <reporting-volume-chart [weeks]="series().weeks" [series]="series().series" />
+        } @else {
+          <p class="rd__none">No cases in this period.</p>
+        }
+      </section>
+      <section class="rd__card" aria-labelledby="rd-sla">
+        <h2 class="rd__card-title" id="rd-sla">Closed within SLA</h2>
+        @if (slaRows().length) {
+          <reporting-sla-chart [rows]="slaRows()" [target]="target" />
+        } @else {
+          <p class="rd__none">No cases in this period.</p>
+        }
+      </section>
+    </div>
+
+    <!-- Report viewer: the table view of everything above, and what CSV export downloads -->
+    <section class="rd__card" aria-labelledby="rd-table">
+      <div class="rd__table-head">
+        <h2 class="rd__card-title" id="rd-table">Weekly report</h2>
+        <button dsButton size="sm" type="button" (click)="exportCsv()" [disabled]="!data.length">Export CSV</button>
+      </div>
+      <div class="rd__table-wrap">
+        <table class="rd__table">
+          <caption class="rd__sr">
+            Weekly report, newest week first,
+            {{
+              tableRows().length
+            }}
+            rows
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Week starting</th>
+              <th scope="col">Case domain</th>
+              <th scope="col" class="rd__num">Opened</th>
+              <th scope="col" class="rd__num">Closed</th>
+              <th scope="col" class="rd__num">Within SLA</th>
+              <th scope="col" class="rd__num">Within SLA %</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of tableRows(); track r.week + r.group.id) {
+              <tr>
+                <td>{{ r.week }}</td>
+                <td>
+                  <span class="rd__swatch" [style.background]="'var(--series-' + r.group.slot + ')'"></span
+                  >{{ r.group.label }}
+                </td>
+                <td class="rd__num">{{ r.opened | number }}</td>
+                <td class="rd__num">{{ r.closed | number }}</td>
+                <td class="rd__num">{{ r.withinSla | number }}</td>
+                <td class="rd__num">{{ r.closed ? ((r.withinSla / r.closed) * 100 | number: '1.1-1') + '%' : '–' }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="6" class="rd__none">No cases in this period.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+} @else {
+  <p class="rd__none" role="status">Loading reports…</p>
+}

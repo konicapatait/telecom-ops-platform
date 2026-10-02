@@ -1,0 +1,119 @@
+{
+  "name": "mfe-fraud",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/mfe-fraud/src",
+  "prefix": "fraud",
+  "tags": ["type:app", "family:case", "kind:domain"],
+  "targets": {
+    "build": {
+      "executor": "@angular-architects/native-federation:build",
+      "outputs": ["{workspaceRoot}/dist/apps/mfe-fraud", "{workspaceRoot}/dist/apps-mock/mfe-fraud"],
+      "options": {},
+      "configurations": {
+        "production": {
+          "target": "mfe-fraud:esbuild:production"
+        },
+        "mock": {
+          "target": "mfe-fraud:esbuild:mock"
+        },
+        "development": {
+          "target": "mfe-fraud:esbuild:development",
+          "dev": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "esbuild": {
+      "executor": "@angular/build:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/mfe-fraud",
+        "index": "apps/mfe-fraud/src/index.html",
+        "browser": "apps/mfe-fraud/src/main.ts",
+        "polyfills": ["es-module-shims"],
+        "tsConfig": "apps/mfe-fraud/tsconfig.app.json",
+        "assets": [],
+        "styles": []
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "anyScript",
+              "maximumWarning": "150kb",
+              "maximumError": "300kb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "4kb",
+              "maximumError": "8kb"
+            }
+          ],
+          "outputHashing": "all",
+          "fileReplacements": [
+            {
+              "replace": "apps/mfe-fraud/src/environments/environment.ts",
+              "with": "apps/mfe-fraud/src/environments/environment.prod.ts"
+            },
+            {
+              "replace": "apps/mfe-fraud/src/start-mocks.ts",
+              "with": "apps/mfe-fraud/src/start-mocks.prod.ts"
+            }
+          ]
+        },
+        "mock": {
+          "outputPath": "dist/apps-mock/mfe-fraud",
+          "outputHashing": "all",
+          "fileReplacements": [
+            {
+              "replace": "apps/mfe-fraud/src/environments/environment.ts",
+              "with": "apps/mfe-fraud/src/environments/environment.mock.ts"
+            }
+          ]
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "assets": [
+            {
+              "glob": "mockServiceWorker.js",
+              "input": "libs/mocks/assets",
+              "output": "/"
+            }
+          ],
+          "styles": ["node_modules/@org/design-tokens/tokens.css", "node_modules/@org/design-tokens/reset.css"]
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-architects/native-federation:build",
+      "continuous": true,
+      "options": {
+        "target": "mfe-fraud:serve-original:development",
+        "rebuildDelay": 500,
+        "dev": true,
+        "cacheExternalArtifacts": false,
+        "port": 0
+      }
+    },
+    "serve-original": {
+      "executor": "@angular/build:dev-server",
+      "continuous": true,
+      "options": {
+        "port": 4201
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "mfe-fraud:esbuild:production"
+        },
+        "development": {
+          "buildTarget": "mfe-fraud:esbuild:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    }
+  }
+}

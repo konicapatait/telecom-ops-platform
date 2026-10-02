@@ -1,0 +1,13 @@
+/**
+ * @file <%= label %> 360 sections, as data (ADR-0024).
+ */
+import type { Section360 } from '@platform/layout-360';
+
+/**
+ * <%= label %> sections, as data (ADR-0024). A capability section lists the `panelInputs` it needs
+ * (e.g. ['accountId']); a section without `remote` is rendered by this app via <ng-template l360Section="id">.
+ * No audit log on 360 screens (resolved decision).
+ */
+export const <%= constName %>_SECTIONS: Section360[] = [
+  { id: 'open-cases', title: 'Open cases', span: 3 },
+];

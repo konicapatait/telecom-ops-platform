@@ -1,0 +1,27 @@
+/**
+ * @file Routes of <%= projectName %>, exposed to the shell as './Routes'.
+ */
+import type { Routes } from '@angular/router';
+import {
+  CaseQueueComponent,
+  CaseViewComponent,
+  CaseWorkspaceLayoutComponent,
+  caseResolver,
+  provideCaseDomain,
+} from '@platform/case-workspace';
+import { entitlementGuard } from '@platform/entitlements';
+import { <%= constName %>_DOMAIN_CONFIG } from './<%= fileName %>.config';
+
+/** Exposed as './Routes'. The shell mounts it at /<%= route %>. Layout comes ONLY from libs/case-workspace (ADR-0021). */
+export default [
+  {
+    path: '',
+    component: CaseWorkspaceLayoutComponent,
+    providers: [provideCaseDomain(<%= constName %>_DOMAIN_CONFIG)],
+    canActivate: [entitlementGuard('<%= entitlement %>')],
+    children: [
+      { path: '', component: CaseQueueComponent, title: '<%= label %>' },
+      { path: 'cases/:caseId', component: CaseViewComponent, resolve: { caseSummary: caseResolver }, title: '<%= label %> case' },
+    ],
+  },
+] satisfies Routes;

@@ -1,0 +1,6 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": { "module": "commonjs", "moduleResolution": "node", "types": ["node", "vitest/globals"] },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/generators/**/files/**"]
+}

@@ -1,0 +1,18 @@
+/**
+ * @file Mock wiring for mfe-cap-audit-trail (MSW + personas). The ONLY place it may import @platform/mocks; replaced in production (ADR-0006).
+ */
+import type { EnvironmentProviders } from '@angular/core';
+import { makeEnvironmentProviders } from '@angular/core';
+import { provideMockAuth } from '@platform/auth-mock';
+import { HERO_CASES, PERSONAS, allHandlers, startMockWorker } from '@platform/mocks';
+import { DEV_FIXTURE_CASES } from './app/dev-fixtures';
+import { environment } from './environments/environment';
+
+/** Standalone harness only. Production builds replace this file with start-mocks.prod.ts (ADR-0006). */
+export async function startMocks(): Promise<EnvironmentProviders[]> {
+  if (environment.mocks) await startMockWorker(allHandlers);
+  return [
+    makeEnvironmentProviders([{ provide: DEV_FIXTURE_CASES, useValue: HERO_CASES }]),
+    ...(environment.mockAuth ? [provideMockAuth(PERSONAS)] : []),
+  ];
+}

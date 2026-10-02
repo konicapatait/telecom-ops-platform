@@ -1,0 +1,15 @@
+@if (current(); as c) {
+  <cw-case-header [caseSummary]="c" [title]="config.title" />
+  <ds-tabs variant="contained" [selectedIndex]="selected()" (selectedIndexChange)="select($event)">
+    @for (t of visibleTabs(); track t.id) {
+      <ds-tab [label]="t.label">
+        @if (opened().has(t.id)) {
+          <!-- created on first open, kept afterwards -->
+          <cw-capability-tab-host [tab]="t" [caseId]="c.caseId" [caseType]="c.caseType" [inputs]="inputsFor(t)" />
+        }
+      </ds-tab>
+    }
+  </ds-tabs>
+} @else {
+  <ds-empty-state icon="empty" heading="Case not found" message="Check the case number, or go back to the queue." />
+}

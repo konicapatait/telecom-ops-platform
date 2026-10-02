@@ -1,0 +1,18 @@
+{
+  "mfe-billing-disputes": "http://localhost:4206/remoteEntry.json",
+  "mfe-cap-account-view": "http://localhost:4210/remoteEntry.json",
+  "mfe-cap-attachments": "http://localhost:4204/remoteEntry.json",
+  "mfe-cap-audit-trail": "http://localhost:4202/remoteEntry.json",
+  "mfe-cap-case-resolution": "http://localhost:4205/remoteEntry.json",
+  "mfe-cap-case-search": "http://localhost:4211/remoteEntry.json",
+  "mfe-cap-subscriber-search": "http://localhost:4213/remoteEntry.json",
+  "mfe-cap-usage-billing": "http://localhost:4203/remoteEntry.json",
+  "mfe-case-management": "http://localhost:4212/remoteEntry.json",
+  "mfe-fraud": "http://localhost:4201/remoteEntry.json",
+  "mfe-number-porting": "http://localhost:4208/remoteEntry.json",
+  "mfe-partner-oversight": "http://localhost:4209/remoteEntry.json",
+  "mfe-partner-view": "http://localhost:4215/remoteEntry.json",
+  "mfe-reporting": "http://localhost:4216/remoteEntry.json",
+  "mfe-service-assurance": "http://localhost:4207/remoteEntry.json",
+  "mfe-subscriber-view": "http://localhost:4214/remoteEntry.json"
+}

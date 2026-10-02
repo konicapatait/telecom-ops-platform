@@ -1,0 +1,8 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "platform", "runtimeExecutable": "npm", "runtimeArgs": ["run", "start:all"], "port": 4200 },
+    { "name": "mfe-fraud", "runtimeExecutable": "npx", "runtimeArgs": ["nx", "serve", "mfe-fraud"], "port": 4201 },
+    { "name": "mfe-cap-audit-trail", "runtimeExecutable": "npx", "runtimeArgs": ["nx", "serve", "mfe-cap-audit-trail"], "port": 4202 }
+  ]
+}

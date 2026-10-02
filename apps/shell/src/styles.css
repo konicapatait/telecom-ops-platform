@@ -1,0 +1,9 @@
+/* Shell-only global styles. Tokens and reset come from @org/design-tokens (see project.json "styles").
+   Remotes NEVER ship global CSS (ADR-0001). */
+shell-root {
+  display: block;
+}
+h1 {
+  font-size: var(--ds-font-size-xl);
+  margin: 0 0 var(--ds-space-4);
+}

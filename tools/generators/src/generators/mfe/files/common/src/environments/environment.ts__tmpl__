@@ -1,0 +1,4 @@
+/**
+ * @file Build-time flags for <%= projectName %>'s development build.
+ */
+export const environment = { mocks: true, mockAuth: true };
