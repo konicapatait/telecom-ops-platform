@@ -14,7 +14,7 @@ Case layouts mount it as a tab or panel through `CaseTabDefinition` (`remote: '<
 | Pipeline | [`.gitlab-ci.yml`](./.gitlab-ci.yml). To run on its own: start a pipeline with `APP=<%= projectName %>` |
 
 ## Rules
-- Import only `scope:shared` libs<% if (family === 'case') { %> and `libs/case-workspace`<% } else if (family === '360') { %> and `libs/layout-360`<% } %>. Never another app (ADR-0002).
+- Import only `scope:shared` libs<% if (family === 'case') { %> and `libs/case-workspace`<% } else if (family === '360') { %> and `libs/layout-360`<% } %>. Never another app ([ADR-0002](../../docs/platform-handbook.md#adr-0002)).
 - No global CSS. Use `@org/design-system` components and `--ds-*` tokens.
 - `@platform/mocks` may be imported only from `src/start-mocks.ts` and specs.
-<% if (kind === 'capability') { %>- Never read the route or another MFE's state. Everything you need comes from `caseId` and `caseType` (ADR-0004).<% } %>
+<% if (kind === 'capability') { %>- Never read the route or another MFE's state. Everything you need comes from `caseId` and `caseType` ([ADR-0004](../../docs/platform-handbook.md#adr-0004)).<% } %>

@@ -27,10 +27,10 @@
 `main.ts`: fetch `mf-manifest.json` → `initFederation(manifest)` → `import('./bootstrap')` → `setRemoteManifest` → `loadRuntimeConfig()` → `startMocks()` → `bootstrapApplication` → initializer: `auth.init()` → `entitlements.load()`.
 Nothing in `main.ts` may import a shared package; it runs before the import map exists.
 
-## Case management page (ADR-0022)
+## Case management page ([ADR-0022](../../../../docs/platform-handbook.md#adr-0022))
 `/case-management[/customers/:id]/<tab>/…` (hub `mfe-case-management`): customer overview + one tab per case-domain remote (`CASE_MANAGEMENT_TABS`). Each tab = `canMatch: remoteAvailable` + in-tab fallback (Retry or re-open recovers). The hub writes `CustomerContextStore`; `CaseQueueComponent` filters by `relevantSubjectIds`. `/case-management/cases/:id` resolves a case to its tab. Old `/fraud`… URLs redirect with path + query kept (guard, not `redirectTo`).
 
-## Case screen (libs/case-workspace, ADR-0017, ADR-0023)
+## Case screen (libs/case-workspace, [ADR-0017](../../../../docs/platform-handbook.md#adr-0017), [ADR-0023](../../../../docs/platform-handbook.md#adr-0023))
 Four tabs: Case decision (`config.resolution`, order 0, gets `resolutionCodes`) · Triggering info (domain panel) · Audit log · Attachments.
 Tabs = `CaseDomainConfig.tabs` ∩ entitlements, sorted by `order`. Created on first open, kept alive (`opened` linkedSignal keyed on caseId, computation `untracked`). Preloaded on resolve when flag `case.tabPreload` is on. Each tab host has its own error + Retry. `?tab=<id>` deep links. Resolution capability in the action rail (needs `case:resolve`). The case view is the one writer of `CaseContextStore`.
 
@@ -40,11 +40,11 @@ inputs (`caseId`, `caseType`) → `CaseContextStore` (one writer) → `CaseEvent
 ## Build flavours
 `development` (local serve) · `mock` (dev env + CI E2E, `dist/apps-mock`) · `production` (staging + prod, `dist/apps`). Only `start-mocks.ts` and `environment.ts` differ (`fileReplacements`).
 
-## Full profiles: Customer / Agent (internally "360"; ADR-0024, ADR-0026)
+## Full profiles: Customer / Agent (internally "360"; [ADR-0024](../../../../docs/platform-handbook.md#adr-0024), [ADR-0026](../../../../docs/platform-handbook.md#adr-0026))
 `/customer-full-profile/:id` (mfe-subscriber-view), `/agent-full-profile/:id` (mfe-partner-view) on `Layout360Component`: banner → KPI strip → `Section360[]` grid. Capability sections get `panelInputs` filtered by `inputs` (e.g. `accountId`). Opened via `OPEN_SUBSCRIBER_360` / `OPEN_PARTNER_360` (shell routes using `opensProfile`). No audit log.
 
-## Observability (ADR-0025)
+## Observability ([ADR-0025](../../../../docs/platform-handbook.md#adr-0025))
 One logger (`createLogger`/`LoggerService`), `sessionId` per page, level via `?logLevel=`, warn/error sink to `LOG_ENDPOINT`. Remote loads traced (traceId, timing, code + hint, history) in mf-manifest; `platformDiagnostics()` in the console.
 
-## Reporting (ADR-0027)
+## Reporting ([ADR-0027](../../../../docs/platform-handbook.md#adr-0027))
 `/reports` (mfe-reporting, own layout): URL filters (`groups`, `from`, `to`) → stat tiles, line chart (opened per week), bar chart (within-SLA % vs 90% target), weekly table, CSV export. Groups = the five Case management tabs, each with a fixed colour slot.

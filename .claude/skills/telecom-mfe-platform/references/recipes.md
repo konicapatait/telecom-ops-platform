@@ -23,7 +23,7 @@ npx nx g @platform/tools:mfe attachments --kind=capability --label="Attachments"
 ```
 - The component gets `caseId` and `caseType` (`input.required`) and fetches its own data with `HttpClient`. No route access.
 - Emit cross-MFE events through `CaseEventBus` (`CaseEvent.ATTACHMENT_ADDED`). Never call another MFE.
-- Data: use `rxResource` + `HttpClient`; render a 403 as an explicit "No access" state (ADR-0019).
+- Data: use `rxResource` + `HttpClient`; render a 403 as an explicit "No access" state ([ADR-0019](../../../../docs/platform-handbook.md#adr-0019)).
 - Specs: `provideHttpClientTesting`, data from `@platform/mocks/fixtures`; see `usage-billing.component.spec.ts`.
 - Develop in the harness (`nx serve mfe-cap-attachments`), which offers hero fixture cases via `DEV_FIXTURE_CASES`.
 - Mount it: add `{ id, label, remote: 'mfe-cap-attachments', exposedModule: './Attachments', order, entitlement? }` to each domain's `CaseDomainConfig.tabs`.
@@ -49,7 +49,7 @@ Fix it in `../design-system` (never patch around it here). Bump semver and CHANG
 1. Copy that phase's gate from `docs/roadmap.md` into `apps/shell-e2e/src/phase-N-<name>.spec.ts` (it fails first).
 2. Generate remotes and libs. Layout libs use tags `type:layout`, `family:<f>` and get `project.json`, `vite.config.mts`, `eslint.config.mjs`, tsconfigs like `libs/entitlements`. **Not** shared mappings.
 3. Build until the gate passes against dev servers **and** a local dev deployment (see verification.md).
-4. Tick the roadmap and add ADRs for any new decisions.
+4. Tick the roadmap, add any new decisions to the handbook decision register, and add new lessons to its "Lessons learned" section.
 
 ## 8. Independent build and deploy of one app
 CI: Run pipeline with `APP=<app>`. Locally:
@@ -60,12 +60,12 @@ node tools/ci/contract-smoke.mjs --app <app> --env dev --provider local
 ```
 Rollback: `node tools/ci/rollback-app.mjs --app <app> --env dev --provider local`.
 
-## 9. Add a 360 view or section (ADR-0024)
+## 9. Add a 360 view or section ([ADR-0024](../../../../docs/platform-handbook.md#adr-0024))
 - New view: `npx nx g @platform/tools:mfe <name> --kind=domain --family=360 --route=<seg> --label="<Label>" --entitlement=<x:view>`. Then set `opensProfile: 'SUBSCRIBER' | 'PARTNER'` on its shell registry entry if it shows a profile by id.
 - New section: one `Section360` entry. A capability on 360 must accept `accountId` (or another named `…Inputs` contract), never only `caseId`.
 - Never add the audit log to a 360 view (`check:layouts` fails).
 
-## 10. Add logging to new code (ADR-0025)
+## 10. Add logging to new code ([ADR-0025](../../../../docs/platform-handbook.md#adr-0025))
 ```ts
 import { createLogger } from '@platform/utils';
 const log = createLogger('my-area');
@@ -73,7 +73,7 @@ log.info('Thing happened', { caseId, durationMs });
 ```
 Pick the level by impact (debug detail · info milestone · warn degraded with fallback · error user blocked). Include ids, never tokens. Add a header comment to every new file.
 
-## 11. Add a report or chart (ADR-0027)
+## 11. Add a report or chart ([ADR-0027](../../../../docs/platform-handbook.md#adr-0027))
 1. Contract (additive) for the series; seeded mock series in `libs/mocks/src/fixtures/reports.ts`; handler with the same `?domains=&from=&to=` query (400 bad range, 403 without `reports:view`).
 2. Aggregate in `apps/mfe-reporting/src/app/model/report-math.ts` (pure, unit-tested). Tiles, charts, table and CSV all read from it.
 3. Pick the form by the data's job (time → line, categories → bars, a single headline → stat tile). Reuse `charts/chart.css` and the `--series-N` slots. A new group needs the NEXT slot, never a cycled one. Re-run the palette validator for light and dark if slots change.

@@ -1,4 +1,4 @@
-# Troubleshooting remote loads (ADR-0025)
+# Troubleshooting remote loads ([ADR-0025](../../../../docs/platform-handbook.md#adr-0025))
 
 ## Where the logs come from
 | Source | Emits |

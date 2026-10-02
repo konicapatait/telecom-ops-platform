@@ -2,7 +2,7 @@
 
 | Symptom | Root cause | Fix in place |
 | --- | --- | --- |
-| `npm error Cannot read properties of null (reading 'edgesOut')` | npm 10.9 bug with Vitest 4 optional peers | npm 11 (ADR-0010) |
+| `npm error Cannot read properties of null (reading 'edgesOut')` | npm 10.9 bug with Vitest 4 optional peers | npm 11 ([ADR-0010](../../../../docs/platform-handbook.md#adr-0010)) |
 | Angular CLI refuses to run | Node 20.18 < 20.19 | Node 22 (`.nvmrc`) |
 | npm warns about install scripts | npm 11 gates them | approved list in `package.json` → `allowScripts` (`npm install-scripts approve <pkg>`) |
 | `Unable to resolve specifier '@platform/auth/mock'` at runtime | Native Federation externalises sub-paths of a shared mapping but has no import-map entry | Unshared entry named `@platform/auth-mock` (not a prefix-extension) |
@@ -17,8 +17,8 @@
 | Built-in IDE browser pane shows a blank page in mock mode | No service-worker support there | Use Chrome; `startMockWorker` logs and continues |
 | Retry after a remote outage never reloads it | Angular caches the failed `loadChildren` | `router.resetConfig(appRoutes())` via `ROUTES_FACTORY` |
 | "Home" nav item always active | `routerLinkActive` prefix match on `/` | fixed in DS 0.1.1 (`exact` for `/`) |
-| `NG0203: rxResource() can only be used within an injection context` only when composed | Host didn't share `@angular/core/rxjs-interop` (`ignoreUnusedDeps: true`), so the remote's copy brought its own core chunks | `ignoreUnusedDeps: false` + skip list (ADR-0018). Never turn it back on. |
-| Kept-alive tabs destroyed on every tab switch | `linkedSignal` computation read `selected()`, so it recomputed on selection | wrap the computation in `untracked` (ADR-0017 §4); covered by `case-view.component.spec.ts` |
+| `NG0203: rxResource() can only be used within an injection context` only when composed | Host didn't share `@angular/core/rxjs-interop` (`ignoreUnusedDeps: true`), so the remote's copy brought its own core chunks | `ignoreUnusedDeps: false` + skip list ([ADR-0018](../../../../docs/platform-handbook.md#adr-0018)). Never turn it back on. |
+| Kept-alive tabs destroyed on every tab switch | `linkedSignal` computation read `selected()`, so it recomputed on selection | wrap the computation in `untracked` ([ADR-0017](../../../../docs/platform-handbook.md#adr-0017) §4); covered by `case-view.component.spec.ts` |
 | `WritableStream is not defined` in jsdom specs | spec imported the `@platform/mocks` barrel (pulls `msw/browser`) | specs import data from `@platform/mocks/fixtures` |
 | `fixture.whenStable()` hangs in a resource spec | a pending `HttpTestingController` request keeps the app unstable | `TestBed.tick()` → `expectOne(...).flush()` → then `await whenStable()` |
 | Clicking a `ds-tabs` tab does nothing in jsdom | `@angular/aria` tabs select on `pointerdown` | dispatch `new MouseEvent('pointerdown', { bubbles: true })` |

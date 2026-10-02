@@ -28,7 +28,7 @@ npm run start:all       # http://localhost:4200, signed in as a mock persona
 | Read this | For |
 | --- | --- |
 | [docs/architecture.md](docs/architecture.md) | How the pieces fit: runtime composition, layout levels, workspace map, quality gates |
-| [docs/adr/](docs/adr/README.md) | **Every decision** and why: decision log, resolved questions, assumptions to confirm |
+| [docs/platform-handbook.md](docs/platform-handbook.md) | **Start here.** What was built, every decision ([ADR-0001](docs/platform-handbook.md#adr-0001)…0027) and why, lessons learned, verification state, assumptions to confirm |
 | [docs/roadmap.md](docs/roadmap.md) | Phase status, gates, what to build next |
 | [docs/guides/local-development.md](docs/guides/local-development.md) | Commands, ports, troubleshooting |
 | [docs/guides/adding-an-mfe.md](docs/guides/adding-an-mfe.md) | The generator and what it wires up |
@@ -49,6 +49,6 @@ libs/      contracts · mf-manifest · auth (+ auth/mock) · entitlements · uti
 tools/     generators (@platform/tools:mfe) · ci (plan/deploy/smoke/rollback) · scripts (guards) · vitest · eslint
 ci/        GitLab job templates
 vendor/    design-system tarballs (until the internal registry exists, ADR-0011)
-docs/      architecture · adr · guides · roadmap
+docs/      platform-handbook · architecture · guides · roadmap
 ```
 The design system is a **separate repo**: [`../design-system`](../design-system/README.md).

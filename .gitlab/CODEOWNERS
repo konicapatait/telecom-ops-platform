@@ -8,7 +8,7 @@
 /eslint.config.mjs                  @telecom/platform-owner
 /ci/                                @telecom/platform-owner
 /.gitlab-ci.yml                     @telecom/platform-owner
-/docs/adr/                          @telecom/platform-owner
+/docs/platform-handbook.md @telecom/platform-owner
 
 [Shared libs] @telecom/platform-team
 /libs/auth/                         @telecom/platform-team

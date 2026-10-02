@@ -1,6 +1,6 @@
 # @platform/layout-360
 
-The shared 360 layout (ADR-0002, ADR-0003, ADR-0024). It is a **build-time** library compiled into every 360-family remote (`mfe-subscriber-view`, `mfe-partner-view`). It is **not** a federation shared mapping and **not** a remote. Owned by the customer-360 team (CODEOWNERS).
+The shared 360 layout ([ADR-0002](../../docs/platform-handbook.md#adr-0002), [ADR-0003](../../docs/platform-handbook.md#adr-0003), [ADR-0024](../../docs/platform-handbook.md#adr-0024)). It is a **build-time** library compiled into every 360-family remote (`mfe-subscriber-view`, `mfe-partner-view`). It is **not** a federation shared mapping and **not** a remote. Owned by the customer-360 team (CODEOWNERS).
 
 ```html
 <l360-layout [profile]="profile()" [kpis]="kpis()" [sections]="SECTIONS" [panelInputs]="{ accountId }">

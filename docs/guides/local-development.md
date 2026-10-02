@@ -1,7 +1,7 @@
 # Local development
 
 ## Prerequisites
-- **Node 22** (`nvm use`; Angular 21 refuses Node < 20.19) and **npm 11** (`npm i -g npm@11`). npm 10.9 crashes on this dependency tree (ADR-0010).
+- **Node 22** (`nvm use`; Angular 21 refuses Node < 20.19) and **npm 11** (`npm i -g npm@11`). npm 10.9 crashes on this dependency tree ([ADR-0010](../platform-handbook.md#adr-0010)).
 - Google Chrome for E2E (`PW_CHANNEL=chrome`), or `npx playwright install chromium`.
 
 ```bash
@@ -35,7 +35,7 @@ Ports come from `libs/mf-manifest/manifests/local/mf-manifest.json`. The generat
 ## Troubleshooting
 | Symptom | Cause / fix |
 | --- | --- |
-| Blank page, console: `Unable to resolve specifier '@platform/...'` | A tsconfig path that starts with a shared mapping's name (e.g. `@platform/auth/x`). Use a non-prefix name (ADR-0008). Run `rm -rf .angular && nx reset` after changing paths. |
+| Blank page, console: `Unable to resolve specifier '@platform/...'` | A tsconfig path that starts with a shared mapping's name (e.g. `@platform/auth/x`). Use a non-prefix name ([ADR-0008](../platform-handbook.md#adr-0008)). Run `rm -rf .angular && nx reset` after changing paths. |
 | `[mocks] MSW could not start` | The browser has no service-worker support (some embedded webviews, private windows). Use Chrome or Edge. |
 | `npm error ... reading 'edgesOut'` | You are on npm 10. Upgrade to npm 11. |
 | `Unsupported engine` | Wrong Node. Run `nvm use`. |

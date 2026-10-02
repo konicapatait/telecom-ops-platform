@@ -14,6 +14,6 @@ Users need the `partner360:view` entitlement to see it.
 
 ## Rules
 
-- Import only `scope:shared` libs and `libs/layout-360`. Never another app (ADR-0002).
+- Import only `scope:shared` libs and `libs/layout-360`. Never another app ([ADR-0002](../../docs/platform-handbook.md#adr-0002)).
 - No global CSS. Use `@org/design-system` components and `--ds-*` tokens.
 - `@platform/mocks` may be imported only from `src/start-mocks.ts` and specs.

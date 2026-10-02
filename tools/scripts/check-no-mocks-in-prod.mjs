@@ -53,7 +53,7 @@ for (const root of roots) {
 }
 
 if (failures) {
-  console.error(`\n${failures} mock leak(s) in production bundles. See docs/adr/0006-mock-first-with-msw.md.`);
+  console.error(`\n${failures} mock leak(s) in production bundles. See ADR-0006 in docs/platform-handbook.md.`);
   process.exit(1);
 }
 console.log(`✔ No mock code in ${roots.length} production build(s).`);

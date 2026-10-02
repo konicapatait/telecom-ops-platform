@@ -1,6 +1,6 @@
 # Architecture overview
 
-One Nx monorepo with a thin Native Federation **shell**, layout **families**, and **capability** remotes, all running on mock data first. Every rule below links to the ADR that decided it.
+One Nx monorepo with a thin Native Federation **shell**, layout **families**, and **capability** remotes, all running on mock data first. Every rule below cites the decision (ADR-00NN) that set it; the reasons are in the decision register of [platform-handbook.md](platform-handbook.md).
 
 ## Repositories
 ```mermaid
@@ -12,6 +12,7 @@ flowchart LR
     Libs[libs/*]
   end
 ```
+The vendored-tarball arrangement is [ADR-0011](platform-handbook.md#adr-0011); the external-package policy is [ADR-0001](platform-handbook.md#adr-0001).
 
 ## Runtime composition
 ```mermaid
@@ -36,7 +37,7 @@ flowchart TB
 3. `import('./bootstrap')`, then `setRemoteManifest`, `loadRuntimeConfig()`, `startMocks()` (mock builds only), `bootstrapApplication`.
 4. App initializer: `auth.init()`, then `entitlements.load()`.
 
-## Layout levels (ADR-0002, ADR-0003)
+## Layout levels ([ADR-0002](platform-handbook.md#adr-0002), [ADR-0003](platform-handbook.md#adr-0003))
 | Level | Owner | Case management | 360 | Reporting |
 | --- | --- | --- | --- | --- |
 | 1 App chrome | `apps/shell` | header, search, nav, notifications | same | same |
@@ -47,16 +48,16 @@ flowchart TB
 | Path | Kind | Tags | Notes |
 | --- | --- | --- | --- |
 | `apps/shell` | host | `type:app family:host` | chrome, auth bootstrap, manifest, routes registry, legacy redirects |
-| `apps/mfe-reporting` | reporting | `type:app family:reporting kind:domain` | `/reports`: dashboard with filters, charts, table, CSV export (ADR-0027) |
-| `apps/mfe-subscriber-view` · `apps/mfe-partner-view` | full profiles (360) | `type:app family:360 kind:domain` | `/customer-full-profile/:id`, `/agent-full-profile/:id` on `libs/layout-360` (ADR-0024, names: ADR-0026) |
+| `apps/mfe-reporting` | reporting | `type:app family:reporting kind:domain` | `/reports`: dashboard with filters, charts, table, CSV export ([ADR-0027](platform-handbook.md#adr-0027)) |
+| `apps/mfe-subscriber-view` · `apps/mfe-partner-view` | full profiles (360) | `type:app family:360 kind:domain` | `/customer-full-profile/:id`, `/agent-full-profile/:id` on `libs/layout-360` ([ADR-0024](platform-handbook.md#adr-0024), names: [ADR-0026](platform-handbook.md#adr-0026)) |
 | `apps/mfe-cap-subscriber-search` | capability (header) | `type:app family:capability` | global search in the shell header; emits `OPEN_*_360` |
-| `apps/mfe-case-management` | hub | `type:app family:case kind:hub` | `/case-management`: customer overview + one tab per case-domain remote (ADR-0022) |
+| `apps/mfe-case-management` | hub | `type:app family:case kind:hub` | `/case-management`: customer overview + one tab per case-domain remote ([ADR-0022](platform-handbook.md#adr-0022)) |
 | `apps/mfe-fraud` | domain remote | `type:app family:case kind:domain` | exposes `./Routes` (queue + case screen at `/fraud`) and `./FraudOverview` (tab panel); owns `FRAUD_DOMAIN_CONFIG` |
-| `apps/mfe-cap-usage-billing` | capability | `type:app family:capability kind:capability` | `./UsageBilling`: usage grid, flagged events (not on case screens since ADR-0023; for Customer full profile) |
+| `apps/mfe-cap-usage-billing` | capability | `type:app family:capability kind:capability` | `./UsageBilling`: usage grid, flagged events (not on case screens since [ADR-0023](platform-handbook.md#adr-0023); for Customer full profile) |
 | `apps/mfe-cap-attachments` | capability | same | `./Attachments`: list, upload, download; emits `ATTACHMENT_ADDED` |
 | `apps/mfe-cap-audit-trail` | capability | same | `./AuditTrail`: **Audit log** tab: search, workflow track, Category/Description/Component/Who |
 | `apps/mfe-cap-case-resolution` | capability | same | `./CaseResolution`: **Case decision** tab, typed form, domain codes via `CaseResolutionInputs` |
-| `apps/mfe-cap-account-view` | capability | same | `./AccountView`: account → lines → devices (not on case screens since ADR-0023; for Customer full profile) |
+| `apps/mfe-cap-account-view` | capability | same | `./AccountView`: account → lines → devices (not on case screens since [ADR-0023](platform-handbook.md#adr-0023); for Customer full profile) |
 | `apps/mfe-cap-case-search` | capability (embedded panel) | same | `./CaseSearch`: on Home; emits `OPEN_CASE` |
 | `apps/mfe-billing-disputes` · `mfe-service-assurance` · `mfe-number-porting` | case domains | `type:app family:case kind:domain` | `/disputes` · `/assurance` · `/porting`; each exposes `./Routes` + its overview panel |
 | `apps/mfe-partner-oversight` | case domain, 3 journeys | same | `/partners/{onboarding,ongoing,field-audit}`; one config per journey |
@@ -96,5 +97,5 @@ flowchart TB
 
 Screenshots: [reports](images/reports-dashboard.png) · [customer full profile](images/customer-full-profile.png) · [agent full profile](images/agent-full-profile.png) · [audit log tab](images/case-audit-log-tab.png) · [case decision tab](images/case-decision-tab.png) · [customer-focused hub](images/case-management-customer.png) · [dispute case + resolution](images/dispute-case-resolution.png) · [account tab](images/case-account-tab.png) · [partner journeys](images/partner-journeys.png) · [case search](images/home-case-search.png) · [fraud queue](images/fraud-queue.png) · [case overview](images/case-overview.png) · [usage tab](images/case-usage-tab.png) · [audit tab](images/case-audit-tab.png) · [home](images/shell-home.png) · [remote loaded](images/shell-fraud-remote.png) · [remote down → fallback](images/shell-remote-fallback.png) · [capability dev harness](images/capability-dev-harness.png)
 
-## Observability (ADR-0025)
+## Observability ([ADR-0025](platform-handbook.md#adr-0025))
 One structured logger for the page (`[platform] time LEVEL source message {context}`, `sessionId`, `?logLevel=debug`). Every remote load is traced in `@platform/mf-manifest` (trace id, duration, error code + hint, history). `platformDiagnostics()` in the console summarises a session. See [guides/troubleshooting.md](guides/troubleshooting.md).

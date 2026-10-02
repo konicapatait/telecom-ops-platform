@@ -1,6 +1,6 @@
 # CI/CD (GitLab)
 
-See ADR-0009 for the reasoning behind this setup.
+See [ADR-0009](../platform-handbook.md#adr-0009) for the reasoning behind this setup.
 
 ```
 root pipeline
@@ -17,7 +17,7 @@ root pipeline
 | Trigger | Apps |
 | --- | --- |
 | Merge request or push to `main` | `nx show projects --affected --type=app` |
-| `package.json` changes an `@org/design-*` version | **all** (ADR-0001) |
+| `package.json` changes an `@org/design-*` version | **all** ([ADR-0001](../platform-handbook.md#adr-0001)) |
 | Run pipeline with `FULL_BUILD=true` | all |
 | Run pipeline with **`APP=mfe-fraud`** | **only mfe-fraud**: independent build and deploy |
 

@@ -1,6 +1,6 @@
 # Design-system upgrades
 
-ADR-0001 sets the policy and ADR-0011 covers the vendored tarballs.
+[ADR-0001](../platform-handbook.md#adr-0001) sets the policy and [ADR-0011](../platform-handbook.md#adr-0011) covers the vendored tarballs.
 
 **Today (vendored tarballs):**
 ```bash

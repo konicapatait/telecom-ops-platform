@@ -14,7 +14,7 @@ Case layouts mount it as a tab or panel through `CaseTabDefinition` (`remote: 'm
 
 ## Rules
 
-- Import only `scope:shared` libs. Never another app (ADR-0002).
+- Import only `scope:shared` libs. Never another app ([ADR-0002](../../docs/platform-handbook.md#adr-0002)).
 - No global CSS. Use `@org/design-system` components and `--ds-*` tokens.
 - `@platform/mocks` may be imported only from `src/start-mocks.ts` and specs.
-- Never read the route or another MFE's state. Everything you need comes from `caseId` and `caseType` (ADR-0004).
+- Never read the route or another MFE's state. Everything you need comes from `caseId` and `caseType` ([ADR-0004](../../docs/platform-handbook.md#adr-0004)).

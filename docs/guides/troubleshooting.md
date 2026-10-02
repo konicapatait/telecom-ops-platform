@@ -1,6 +1,6 @@
 # Troubleshooting
 
-Logging and tracing are described in ADR-0025.
+Logging and tracing are described in [ADR-0025](../platform-handbook.md#adr-0025).
 
 ## 1. "This section / tab / panel is unavailable"
 1. Open DevTools → Console. Find the line:
@@ -15,7 +15,7 @@ Logging and tracing are described in ADR-0025.
 | `NOT_IN_MANIFEST` | The environment's `mf-manifest.json` has no entry for the remote | Deploy the remote (`deploy-app.mjs` writes the entry) or fix the name; locally, regenerate the entry with the generator |
 | `REMOTE_ENTRY_UNREACHABLE` | `remoteEntry.json` could not be fetched | Is the remote running or deployed at that URL? Check CORS on the CDN, the URL in the manifest, and VPN/proxy. Locally: `npm run start:all`. |
 | `EXPOSED_MODULE_MISSING` | The deployed remote does not expose that module | Compare `apps/<remote>/federation.config.js` `exposes` with the caller's config (`CaseTabDefinition.exposedModule`, `Section360`); run `contract-smoke.mjs`; redeploy |
-| `MODULE_IMPORT_FAILED` | Entry loaded, code failed to import | Shared-dependency mismatch (`strictVersion`), a tsconfig path that is a sub-path of a shared mapping (ADR-0008), or a stale CDN cache; run `npm run check:shared-config` |
+| `MODULE_IMPORT_FAILED` | Entry loaded, code failed to import | Shared-dependency mismatch (`strictVersion`), a tsconfig path that is a sub-path of a shared mapping ([ADR-0008](../platform-handbook.md#adr-0008)), or a stale CDN cache; run `npm run check:shared-config` |
 | `NO_EXPORT` | Module has no default Routes or component class | Check the exposed file's `export default` |
 | `SIMULATED` | `?mockFail=<remote>` in the URL | Remove the flag |
 | `UNKNOWN` | Not classified | Read `reason`, then the Network tab for that remote's files |

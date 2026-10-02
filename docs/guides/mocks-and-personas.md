@@ -1,6 +1,6 @@
 # Mocks and personas
 
-The mocks setup is described in ADR-0006.
+The mocks setup is described in [ADR-0006](../platform-handbook.md#adr-0006).
 
 ```
 libs/mocks/src/
@@ -26,7 +26,7 @@ libs/auth/mock/        @platform/auth-mock: MockAuthService, provideMockAuth (NO
 
 The persona travels as `Authorization: Bearer mock.<id>`. Handlers read it with `personaFromRequest(request)`.
 
-## Endpoints and the entitlement each one enforces (ADR-0019)
+## Endpoints and the entitlement each one enforces ([ADR-0019](../platform-handbook.md#adr-0019))
 | Method + path | Entitlement | Notes |
 | --- | --- | --- |
 | `GET /api/me/entitlements` | (signed in) | persona from `Bearer mock.<id>` |
@@ -65,7 +65,7 @@ Add it to `allHandlers` in `handlers/index.ts` and write a spec next to it (Node
 - Fixtures are typed with `@platform/contracts` types. Never use `any`.
 - Hero ids never change. Tests and demos depend on them.
 - Phone numbers use the fictional 555-01xx range.
-- Never import `@platform/mocks` outside `start-mocks.ts` or specs (lint error), and never add new mock-only code to a shared lib (ADR-0008).
+- Never import `@platform/mocks` outside `start-mocks.ts` or specs (lint error), and never add new mock-only code to a shared lib ([ADR-0008](../platform-handbook.md#adr-0008)).
 
 ## Hero cases (stable ids)
 | Case | Domain | Use it for |

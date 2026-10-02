@@ -19,7 +19,7 @@ These conventions keep a codebase with many teams and many remotes readable and 
 - Selector prefix per project (lint): `shell-`, `cw-`, `l360-`, `fraud-`, `casemanagement-` …
 - Templates over ~40 lines move to a `.html` file; styles use `--ds-*` tokens only (no hard-coded colours) and no global CSS from remotes.
 
-## Logging (ADR-0025)
+## Logging ([ADR-0025](../platform-handbook.md#adr-0025))
 - Use the platform logger, never `console.*`:
   ```ts
   const log = createLogger('case-workspace');     // plain code
@@ -29,7 +29,7 @@ These conventions keep a codebase with many teams and many remotes readable and 
 - Levels: DEBUG detail for developers · INFO one line per meaningful milestone · WARN degraded but working (a fallback is shown) · ERROR the user is blocked.
 
 ## Architecture rules
-See `.claude/skills/telecom-mfe-platform/SKILL.md` for the rule table (boundaries, shared config, mocks, contracts, families, tabs/sections as configuration) and `docs/adr/` for the reasoning behind each rule.
+See `.claude/skills/telecom-mfe-platform/SKILL.md` for the rule table (boundaries, shared config, mocks, contracts, families, tabs/sections as configuration) and the decision register in `docs/platform-handbook.md` for the reasoning behind each rule.
 
 ## Before you push
 ```bash
